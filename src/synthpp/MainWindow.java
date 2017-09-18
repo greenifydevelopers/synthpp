@@ -19,7 +19,7 @@ public class MainWindow extends PApplet {
     public static void main(String[] args) {
         PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
-
+    private int high;
     private Minim minim;
     private AudioOutput out;
     private SineWave sine;
