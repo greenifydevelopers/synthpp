@@ -13,6 +13,7 @@ public class Button implements Clickable{
     protected PApplet pApplet;
     protected ButtonAdapter listener;
     protected boolean isPressed;
+    protected boolean isDisabled;
     protected Color orginalForegroundColor;//used for mouseover effect
     protected Color orginalBackgroundColor;
 
@@ -25,6 +26,7 @@ public class Button implements Clickable{
         this.orginalBackgroundColor = bg;
         this.orginalForegroundColor = fg;
         isPressed = false;
+        isDisabled = false;
     }
     public void draw(){
         text.draw();
@@ -53,6 +55,9 @@ public class Button implements Clickable{
         return isPressed;
     }
 
+    public boolean isDisabled(){ return isDisabled;}
+    public void setDisabled(boolean d){ isDisabled = d;}
+
     @Override
     public void mousePressed(PApplet pApplet) {
         if(listener != null){
@@ -63,7 +68,7 @@ public class Button implements Clickable{
 
     @Override
     public void mouseReleased(PApplet pApplet) {
-        if(listener != null){
+        if(listener != null && !isDisabled){
             listener.mouseReleased(pApplet);
             isPressed = false;
         }

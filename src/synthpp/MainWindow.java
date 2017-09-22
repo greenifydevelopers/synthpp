@@ -70,6 +70,8 @@ public class MainWindow extends PApplet {
     ToggleButton metronomeOnOffSwitch;
 
     ArrayList<Clickable> clickables;
+    AudioButtons midiPlayerButtons;
+    AudioButtons mp3PlayerButtons;
 
     //********************************************
 
@@ -159,6 +161,8 @@ public class MainWindow extends PApplet {
         loadMidi.draw();
         saveMidi.draw();
         loadMP3.draw();
+        midiPlayerButtons.draw();
+        mp3PlayerButtons.draw();
 
         //implement highlighting when mouse is over any controls that are Clickable
         for(int i = 0; i < clickables.size(); i++){
@@ -387,5 +391,81 @@ public class MainWindow extends PApplet {
         //add to clickables arraylist
         clickables.add(loadMP3);
 
+        //create the strip of midi player buttons
+        midiPlayerButtons = new AudioButtons(this, 150, 20,
+                170,66,Color.yellow, Color.white, AudioButtons.LAYOUT.horizontal);
+        midiPlayerButtons.addPlayButtonListener(new ButtonAdapter() {
+            @Override
+            public void mousePressed(PApplet pApplet) {
+                System.out.println("midi play button clicked!");
+            }
+            @Override
+            public void mouseReleased(PApplet pApplet) {}
+        });
+        midiPlayerButtons.addStopButtonListener(new ButtonAdapter() {
+            @Override
+            public void mousePressed(PApplet pApplet) {
+                System.out.println("midi stop button clicked!");
+            }
+            @Override
+            public void mouseReleased(PApplet pApplet) {}
+        });
+        midiPlayerButtons.addPauseButtonListener(new ButtonAdapter() {
+            @Override
+            public void mousePressed(PApplet pApplet) {
+                System.out.println("midi pause button clicked!");
+            }
+            @Override
+            public void mouseReleased(PApplet pApplet) {}
+        });
+        midiPlayerButtons.addRecordButtonListener(new ButtonAdapter() {
+            @Override
+            public void mousePressed(PApplet pApplet) {
+                System.out.println("midi record button clicked!");
+            }
+            @Override
+            public void mouseReleased(PApplet pApplet) {}
+        });
+        clickables.add(midiPlayerButtons.getPlayButtonReference());
+        clickables.add(midiPlayerButtons.getStopButtonReference());
+        clickables.add(midiPlayerButtons.getPauseButtonReference());
+        clickables.add(midiPlayerButtons.getRecordButtonReference());
+
+
+        //create the strip of mp3 player buttons
+        mp3PlayerButtons = new AudioButtons(this, 150, 20,
+                170,114,Color.yellow, Color.white, AudioButtons.LAYOUT.horizontal);
+        mp3PlayerButtons.addPlayButtonListener(new ButtonAdapter() {
+            @Override
+            public void mousePressed(PApplet pApplet) {
+                System.out.println("mp3 play button clicked!");
+            }
+            @Override
+            public void mouseReleased(PApplet pApplet) {}
+        });
+        mp3PlayerButtons.addStopButtonListener(new ButtonAdapter() {
+            @Override
+            public void mousePressed(PApplet pApplet) {
+                System.out.println("mp3 stop button clicked!");
+            }
+            @Override
+            public void mouseReleased(PApplet pApplet) {}
+        });
+        mp3PlayerButtons.addPauseButtonListener(new ButtonAdapter() {
+            @Override
+            public void mousePressed(PApplet pApplet) {
+                System.out.println("mp3 pause button clicked!");
+            }
+            @Override
+            public void mouseReleased(PApplet pApplet) {}
+        });
+
+        //disable the record button for this strip of buttons
+        mp3PlayerButtons.disableButton(AudioButtons.BUTTONTYPE.record);
+
+        clickables.add(mp3PlayerButtons.getPlayButtonReference());
+        clickables.add(mp3PlayerButtons.getStopButtonReference());
+        clickables.add(mp3PlayerButtons.getPauseButtonReference());
+        clickables.add(mp3PlayerButtons.getRecordButtonReference());
     }
 }
