@@ -283,7 +283,7 @@ public class MainWindow extends PApplet {
         clickables.add(metronomePlusButton);
 
         metronomeOnOffSwitch = new ToggleButton(this, 20, 36,768, 12,
-                Color.black, Color.white,ToggleButton.DIRECTION.vertical);
+                Color.black, Color.white, Color.green, ToggleButton.DIRECTION.vertical);
         metronomeOnOffSwitch.addButtonListener(new ButtonAdapter(){
             @Override
             public void mousePressed(PApplet pApplet) {

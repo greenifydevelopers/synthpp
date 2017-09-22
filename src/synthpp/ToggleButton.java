@@ -19,14 +19,18 @@ public class ToggleButton extends Button {
     private int switchW;
     private int switchH;
     private Color switchColor;
+    private Color onColor;
+    private Color offColor;
 
-    public ToggleButton(PApplet pApplet, int w, int h, int x, int y, Color bg, Color fg, DIRECTION d) {
-        super(pApplet, "", new PFont(), w, h, x, y, bg, fg);
+    public ToggleButton(PApplet pApplet, int w, int h, int x, int y, Color bg, Color offColor, Color onColor, DIRECTION d) {
+        super(pApplet, "", new PFont(), w, h, x, y, bg, offColor);
         this.direction = d;
+        this.onColor = onColor;
+        this.offColor = offColor;
 
         //set the current state of the switch to off
         isOn = false;
-        switchColor = fg;
+        switchColor = offColor;
         switchX = x+4;
         switchY = y+(h-(h/2))+1;
         if(isVertical()) {
@@ -64,14 +68,14 @@ public class ToggleButton extends Button {
         //toggle the switch
         isOn = (isOn)?false:true;
 
-        //change the switch positoin
+        //change the switch position
         if(isOn){
             if(isVertical()){
                 switchY -= getHeight()/2-1;
             }else{
                 switchX -= getWidth()/2-1;
             }
-            switchColor = getOrginalForegroundColor();
+            switchColor = onColor;
 
         }else{
             if(isVertical()){
@@ -79,7 +83,7 @@ public class ToggleButton extends Button {
             }else{
                 switchX += getWidth()/2-1;
             }
-            switchColor = getOrginalForegroundColor();
+            switchColor = offColor;
         }
 
         //must call super method to notify registered listener
