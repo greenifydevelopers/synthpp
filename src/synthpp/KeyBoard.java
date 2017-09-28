@@ -3,6 +3,7 @@ package synthpp;
 import ddf.minim.AudioOutput;
 import ddf.minim.signals.SineWave;
 import processing.core.PApplet;
+import javax.sound.midi.*;
 
 import java.awt.*;
 
@@ -12,6 +13,8 @@ import java.awt.*;
 public class KeyBoard {
 
     private KeyButton buttons[];
+    private int[] referenceNoteNumbers = {0,1,2,3,4,5,6,7,8,9,10,11,12};
+    private int[] noteNumbers;
     private float[] referenceTones = {8.1757989156f, 8.6619572180f, 9.1770239974f, 9.7227182413f,
             10.3008611535f, 10.9133822323f, 11.5623257097f, 12.2498573744f,
             12.9782717994f,13.7500000000f,14.5676175474f,15.4338531643f,16.3515978312f};
@@ -28,6 +31,10 @@ public class KeyBoard {
     private int height;
     private int keysPressed = 0;
     private float MAXAMP = 1.0f;
+    private MidiChannel channels[];
+    private Synthesizer synth;
+
+    //create private members for all
 
     private AudioOutput out;
 
@@ -39,6 +46,22 @@ public class KeyBoard {
         this.width = width;
         this.height = height;
         octave = 7;
+        try {
+            this.synth = MidiSystem.getSynthesizer();
+            synth.open();
+            System.out.println("Made it 1");
+        } catch (Exception exc){
+            exc.printStackTrace();
+            System.out.println("Exception Caught");
+        }
+        System.out.println("Getting Channels");
+        this.channels = synth.getChannels();
+        System.out.println("Got it");
+
+        System.out.println("Playing Note");
+        channels[1].noteOn(25, 500);
+        System.out.println("Played it");
+
     }
 
     public void setOctave(int octave){
@@ -49,8 +72,9 @@ public class KeyBoard {
     }
 
     public void keyPressed(char key){
+
         keysPressed = 0;
-        out.clearSignals();
+        //out.clearSignals();
         for(int i=0;i<keys.length;i++){
             if(Character.toUpperCase(key) == keys[i]){
                 keyStates[i] = true;
@@ -65,18 +89,23 @@ public class KeyBoard {
 
         for(int i=0;i<keys.length;i++){
             if(keyStates[i]){
-                out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
+
+                //insert key down synth here
+                channels[1].noteOn(referenceNoteNumbers[i] + 12*octave,500);
+
+               // out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
             }
         }
     }
     public void keyReleased(char key){
         keysPressed = 0;
-        out.clearSignals();
+        //out.clearSignals();
         for(int i=0;i<keys.length;i++)
         {
             if(Character.toUpperCase(key) == keys[i])
             {
                 keyStates[i] = false;
+                //channels[1].noteOff(referenceNoteNumbers[i] + 12*octave);
             }
             if(keyStates[i])
             {
@@ -89,7 +118,7 @@ public class KeyBoard {
 
         for(int i=0;i<keys.length;i++){
             if(keyStates[i]){
-                out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
+               // out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
             }
         }
     }
@@ -196,5 +225,10 @@ public class KeyBoard {
             parent.text(text, xPos + (width / 2 - 3), yPos + height - 5);
 
         }
+
+    }
+
+    public void closeSynth(){
+        synth.close();
     }
 }

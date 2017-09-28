@@ -6,7 +6,7 @@ package synthpp;
  */
 import processing.core.PApplet;
 import processing.core.PFont;
-
+import javax.sound.midi.*;
 import ddf.minim.*;
 import ddf.minim.signals.*;
 
@@ -91,7 +91,9 @@ public class MainWindow extends PApplet {
 
     @Override
     public void stop(){
+
         // always close Minim audio classes when you are finished with them
+        keyBoard.closeSynth();
         out.close();
         minim.stop();
         super.stop();
