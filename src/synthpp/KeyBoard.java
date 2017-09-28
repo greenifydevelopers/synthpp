@@ -36,11 +36,11 @@ public class KeyBoard {
 
     //create private members for all
 
-    private AudioOutput out;
+    //private AudioOutput out;
 
     public KeyBoard(PApplet pApplet, AudioOutput out, int xPositoin, int yPosition, int width, int height){
         this.parent = pApplet;
-        this.out = out;
+        //this.out = out;
         this.xPosition = xPositoin;
         this.yPosition = yPosition;
         this.width = width;
@@ -49,18 +49,15 @@ public class KeyBoard {
         try {
             this.synth = MidiSystem.getSynthesizer();
             synth.open();
+            this.channels = synth.getChannels();
+
             System.out.println("Made it 1");
         } catch (Exception exc){
             exc.printStackTrace();
             System.out.println("Exception Caught");
         }
-        System.out.println("Getting Channels");
-        this.channels = synth.getChannels();
-        System.out.println("Got it");
 
-        System.out.println("Playing Note");
-        channels[1].noteOn(25, 500);
-        System.out.println("Played it");
+
 
     }
 
@@ -90,8 +87,10 @@ public class KeyBoard {
         for(int i=0;i<keys.length;i++){
             if(keyStates[i]){
 
+
+
                 //insert key down synth here
-                channels[1].noteOn(referenceNoteNumbers[i] + 12*octave,500);
+                channels[1].noteOn(referenceNoteNumbers[i] + 12*octave,5000);
 
                // out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
             }

@@ -17,7 +17,37 @@ import ddf.minim.signals.*;
 public class MainWindow extends PApplet {
 
     public static void main(String[] args) {
-        PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
+        try
+        {
+// Locate the default synthesizer
+            Synthesizer synth = MidiSystem.getSynthesizer();
+
+// Open the synthesizer
+            synth.open();
+
+// Get the available Midi channels - there are usually 16
+            MidiChannel channels[] = synth.getChannels();
+
+// Play a note on channel 1
+            channels[1].noteOn(25, 500);
+
+// Give the note some time to play
+            Thread.sleep(4000);
+
+// Turn the note off
+            channels[1].noteOff(25);
+
+// Close the synthesizer device
+            synth.close();
+
+// Terminate the program
+            System.exit(0);
+        }
+        catch (Exception exc)
+        {
+            exc.printStackTrace();
+        }
+        //PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
     private int high;
     private Minim minim;
