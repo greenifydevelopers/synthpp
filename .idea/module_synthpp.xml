@@ -2,9 +2,6 @@
 <project name="module_synthpp" default="compile.module.synthpp">
   <dirname property="module.synthpp.basedir" file="${ant.file.module_synthpp}"/>
   
-  <property name="module.jdk.home.synthpp" value="${project.jdk.home}"/>
-  <property name="module.jdk.bin.synthpp" value="${project.jdk.bin}"/>
-  <property name="module.jdk.classpath.synthpp" value="${project.jdk.classpath}"/>
   
   <property name="compiler.args.synthpp" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
   
@@ -16,7 +13,6 @@
   </path>
   
   <path id="synthpp.module.production.classpath">
-    <path refid="${module.jdk.classpath.synthpp}"/>
     <fileset dir="${basedir}/libs">
       <patternset refid="library.patterns"/>
     </fileset>
@@ -30,7 +26,6 @@
   </path>
   
   <path id="synthpp.module.classpath">
-    <path refid="${module.jdk.classpath.synthpp}"/>
     <pathelement location="${synthpp.output.dir}"/>
     <fileset dir="${basedir}/libs">
       <patternset refid="library.patterns"/>
@@ -65,7 +60,7 @@
   
   <target name="compile.module.synthpp.production" description="Compile module synthpp; production classes">
     <mkdir dir="${synthpp.output.dir}"/>
-    <javac destdir="${synthpp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.synthpp}/javac">
+    <javac destdir="${synthpp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
       <compilerarg line="${compiler.args.synthpp}"/>
       <bootclasspath refid="synthpp.module.bootclasspath"/>
       <classpath refid="synthpp.module.production.classpath"/>
