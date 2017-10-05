@@ -399,7 +399,7 @@ public class MainWindow extends PApplet {
 
         //create the strip of midi player buttons
         midiPlayerButtons = new AudioButtons(this, 150, 20,
-                170,66,Color.yellow, Color.white, AudioButtons.LAYOUT.horizontal);
+                170,66,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         midiPlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -427,6 +427,12 @@ public class MainWindow extends PApplet {
         midiPlayerButtons.addRecordButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
+                //change background color of record button on click
+                if(midiPlayerButtons.isRecording){
+                    midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.record, Color.red);
+                }else{
+                    midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.record, Color.white);
+                }
                 System.out.println("midi record button clicked!");
             }
             @Override
@@ -440,7 +446,7 @@ public class MainWindow extends PApplet {
 
         //create the strip of mp3 player buttons
         mp3PlayerButtons = new AudioButtons(this, 150, 20,
-                170,114,Color.yellow, Color.white, AudioButtons.LAYOUT.horizontal);
+                170,114,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         mp3PlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {

@@ -43,6 +43,7 @@ public class Button implements Clickable{
     public void setBackgroundColor(Color c){
         text.setBackgroundColor(c);
     }
+    public Color getBackgroundColor(){return text.getBackgroundColor();}
     public void setForgroundColor(Color c){
         text.setForegroundColor(c);
     }
