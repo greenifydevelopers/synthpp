@@ -13,7 +13,8 @@ public class Metronome extends Thread
 
     public static  String getBPM()
     {
-        return Double.toString(bpm);
+        int intBpm = (int)bpm;
+        return Integer.toString(intBpm);
     }
 
 

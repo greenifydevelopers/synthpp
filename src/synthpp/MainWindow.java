@@ -262,12 +262,11 @@ public class MainWindow extends PApplet {
                if(Metronome.bpm > 30)
                {
                    Metronome.bpm--;
+                   metronomeDisplay.setText(Metronome.getBPM());
                }
             }
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("metronomeMinusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(metronomeMinusButton);
 
@@ -281,13 +280,11 @@ public class MainWindow extends PApplet {
                 if(Metronome.bpm < 400)
                 {
                     Metronome.bpm++;
+                    metronomeDisplay.setText(Metronome.getBPM());
                 }
             }
-
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("metronomePlusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(metronomePlusButton);
 
@@ -296,7 +293,8 @@ public class MainWindow extends PApplet {
         metronomeOnOffSwitch.addButtonListener(new ButtonAdapter()
         {
             @Override
-            public void mousePressed(PApplet pApplet) {
+            public void mousePressed(PApplet pApplet)
+            {
                     if (metro == null)
                     {
                         metro = new Metronome();
@@ -308,7 +306,6 @@ public class MainWindow extends PApplet {
                         metro.end();
                         metro = null;
                     }
-
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
