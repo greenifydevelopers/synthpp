@@ -297,16 +297,18 @@ public class MainWindow extends PApplet {
         {
             @Override
             public void mousePressed(PApplet pApplet) {
-                if (metronomeOnOffSwitch.isOn()) {
-                    if (metro == null) {
+                    if (metro == null)
+                    {
                         metro = new Metronome();
                         Thread t = new Thread(metro);
                         t.start();
-                    } else {
+                    }
+                    else
+                    {
                         metro.end();
                         metro = null;
                     }
-                }
+
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
