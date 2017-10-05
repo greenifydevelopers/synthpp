@@ -22,6 +22,7 @@ public class MainWindow extends PApplet {
     public static void main(String[] args) {
         PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
+    private Metronome metro;
     private int high;
     private Minim minim;
     private AudioOutput out;
@@ -239,7 +240,7 @@ public class MainWindow extends PApplet {
         amplitudeLabel.setForegroundColor(Color.WHITE);
 
 
-        metronomeDisplay = new TextLabel(this,"120", labelFont28,
+        metronomeDisplay = new TextLabel(this, Metronome.getBPM(), labelFont28,
                 655,11,100,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center,
                 0);
         metronomeDisplay.setBackgroundColor(screenColor);
@@ -253,16 +254,16 @@ public class MainWindow extends PApplet {
 
         metronomeMinusButton = new Button(this, "-", labelFont12, 10, 15, 656, 48, Color.darkGray, Color.white);
         metronomeMinusButton.setBackgroundColor(Color.darkGray);
-        metronomeMinusButton.addButtonListener(new ButtonAdapter() {
+        metronomeMinusButton.addButtonListener(new ButtonAdapter()
+        {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                int bpm = Integer.parseInt(metronomeDisplay.getText());
-                if(bpm-1>=1){
-                    metronomeDisplay.setText("" + (Integer.parseInt(metronomeDisplay.getText()) - 1));
-                }
-                System.out.println("metronomeMinusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+               if(Metronome.bpm > 30)
+               {
+                   Metronome.bpm--;
+               }
             }
-
             @Override
             public void mouseReleased(PApplet pApplet) {
                 System.out.println("metronomeMinusButton released");
@@ -272,11 +273,15 @@ public class MainWindow extends PApplet {
 
         metronomePlusButton = new Button(this, "+", labelFont12, 10, 15, 744, 48, Color.darkGray, Color.white);
         metronomePlusButton.setBackgroundColor(Color.darkGray);
-        metronomePlusButton.addButtonListener(new ButtonAdapter() {
+        metronomePlusButton.addButtonListener(new ButtonAdapter()
+        {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                metronomeDisplay.setText("" + (Integer.parseInt(metronomeDisplay.getText())+1));
-                System.out.println("metronomePlusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+                if(Metronome.bpm < 400)
+                {
+                    Metronome.bpm++;
+                }
             }
 
             @Override
@@ -288,19 +293,21 @@ public class MainWindow extends PApplet {
 
         metronomeOnOffSwitch = new ToggleButton(this, 20, 36,768, 12,
                 Color.black, Color.white, Color.green, ToggleButton.DIRECTION.vertical);
-        metronomeOnOffSwitch.addButtonListener(new ButtonAdapter(){
+        metronomeOnOffSwitch.addButtonListener(new ButtonAdapter()
+        {
             @Override
             public void mousePressed(PApplet pApplet) {
-                //Erik, this is where you will call start or stop depending on the
-                //state of the metronmeOnOffSwitch.isOn() return value
-                if(metronomeOnOffSwitch.isOn()){
-                    System.out.println("metronomeOnOffSwitch is on!");
-                }else{
-                    System.out.println("metronomeOnOffSwitch is off!");
+                if (metronomeOnOffSwitch.isOn()) {
+                    if (metro == null) {
+                        metro = new Metronome();
+                        Thread t = new Thread(metro);
+                        t.start();
+                    } else {
+                        metro.end();
+                        metro = null;
+                    }
                 }
-
             }
-
             @Override
             public void mouseReleased(PApplet pApplet) {}
         });
