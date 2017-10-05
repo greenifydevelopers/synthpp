@@ -66,7 +66,16 @@ public class ToggleButton extends Button {
     @Override
     public void mousePressed(PApplet pApplet) {
         //toggle the switch
-        isOn = (isOn)?false:true;
+        //isOn = (isOn)?false:true;
+
+        if(isOn)
+        {
+            isOn = false;
+        }
+        else
+        {
+            isOn = true;
+        }
 
         //change the switch position
         if(isOn){

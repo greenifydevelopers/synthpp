@@ -18,6 +18,10 @@ public class AudioButtons {
     protected Button stopButton;
     protected Button pauseButton;
     protected Button recordButton;
+    protected Boolean isPaused = false;
+    protected Boolean isPlaying = false;
+    protected Boolean isRecording =  false;
+    protected Boolean isStopped = true;
     protected ButtonAdapter playButtonListener;
     protected ButtonAdapter stopButtonListener;
     protected ButtonAdapter pauseButtonListener;
@@ -51,6 +55,30 @@ public class AudioButtons {
     public void draw(){
         for(int i = 0; i < buttons.size(); i++){
             buttons.get(i).draw();
+        }
+    }
+    public void setButtonColor(BUTTONTYPE type, Color c){
+        switch (type){
+            case play: {
+                playButton.setBackgroundColor(c);
+                playButton.draw();
+                break;
+            }
+            case stop: {
+                stopButton.setBackgroundColor(c);
+                stopButton.draw();
+                break;
+            }
+            case pause: {
+                pauseButton.setBackgroundColor(c);
+                pauseButton.draw();
+                break;
+            }
+            case record: {
+                recordButton.setBackgroundColor(c);
+                recordButton.draw();
+                break;
+            }
         }
     }
     public void disableButton(BUTTONTYPE t){
@@ -104,7 +132,7 @@ public class AudioButtons {
             @Override
             public void draw(){
                 if(!isDisabled){
-                    pApplet.fill(forgroundColor.getRGB());
+                    pApplet.fill(getBackgroundColor().getRGB());
                     pApplet.triangle(positionX, positionY+2,
                             positionX + 15, positionY + 8,
                             positionX, positionY + 16);
@@ -112,8 +140,9 @@ public class AudioButtons {
             }
             @Override
             public void mousePressed(PApplet pApplet){
-
                 if(playButtonListener != null) {
+                    isPlaying = isPlaying?false:true;//update the state first
+                    isStopped = false;
                     playButtonListener.mousePressed(pApplet);
                 }
             }
@@ -123,13 +152,14 @@ public class AudioButtons {
             @Override
             public void draw(){
                 if(!isDisabled) {
-                    pApplet.fill(forgroundColor.getRGB());
+                    pApplet.fill(getBackgroundColor().getRGB());
                     pApplet.rect(positionX + 22, positionY + 2, height-6, 14);
                 }
             }
             @Override
             public void mousePressed(PApplet pApplet){
                 if(stopButtonListener != null) {
+                    isStopped = isStopped?false:true;
                     stopButtonListener.mousePressed(pApplet);
                 }
             }
@@ -139,7 +169,7 @@ public class AudioButtons {
             @Override
             public void draw(){
                 if(!isDisabled){
-                    pApplet.fill(forgroundColor.getRGB());
+                    pApplet.fill(getBackgroundColor().getRGB());
                     pApplet.rect(positionX + 45, positionY + 2, (height-6)/2-1, 14);
                     pApplet.rect(positionX + 55, positionY + 2, (height-6)/2-1, 14);
                 }
@@ -147,6 +177,8 @@ public class AudioButtons {
             @Override
             public void mousePressed(PApplet pApplet){
                 if(pauseButtonListener != null) {
+                    isPaused = isPaused?false:true;//update the state first
+                    isStopped = false;
                     pauseButtonListener.mousePressed(pApplet);
                 }
             }
@@ -156,17 +188,23 @@ public class AudioButtons {
             @Override
             public void draw(){
                 if(!isDisabled){
-                    pApplet.fill(forgroundColor.getRGB());
+                    pApplet.fill(getBackgroundColor().getRGB());
                     pApplet.ellipse(positionX + 78, positionY + 9, 14, 14);
                 }
             }
             @Override
             public void mousePressed(PApplet pApplet){
                 if(recordButtonListener != null) {
+                    isRecording = (isRecording)?false:true;//set the state first
+                    isStopped = false;
                     recordButtonListener.mousePressed(pApplet);
                 }
             }
         };
-
     }
+    public boolean isRecording(){return isRecording;}
+    public boolean isPlaying(){return isPlaying;}
+    public boolean isPaused(){return isPaused;}
+    public boolean isStopped(){return isStopped;}
+
 }

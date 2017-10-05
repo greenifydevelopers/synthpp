@@ -22,6 +22,7 @@ public class MainWindow extends PApplet {
     public static void main(String[] args) {
         PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
+    private Metronome metro;
     private int high;
     private Minim minim;
     private AudioOutput out;
@@ -239,7 +240,7 @@ public class MainWindow extends PApplet {
         amplitudeLabel.setForegroundColor(Color.WHITE);
 
 
-        metronomeDisplay = new TextLabel(this,"120", labelFont28,
+        metronomeDisplay = new TextLabel(this, Metronome.getBPM(), labelFont28,
                 655,11,100,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center,
                 0);
         metronomeDisplay.setBackgroundColor(screenColor);
@@ -253,54 +254,59 @@ public class MainWindow extends PApplet {
 
         metronomeMinusButton = new Button(this, "-", labelFont12, 10, 15, 656, 48, Color.darkGray, Color.white);
         metronomeMinusButton.setBackgroundColor(Color.darkGray);
-        metronomeMinusButton.addButtonListener(new ButtonAdapter() {
+        metronomeMinusButton.addButtonListener(new ButtonAdapter()
+        {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                int bpm = Integer.parseInt(metronomeDisplay.getText());
-                if(bpm-1>=1){
-                    metronomeDisplay.setText("" + (Integer.parseInt(metronomeDisplay.getText()) - 1));
-                }
-                System.out.println("metronomeMinusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+               if(Metronome.bpm > 30)
+               {
+                   Metronome.bpm--;
+                   metronomeDisplay.setText(Metronome.getBPM());
+               }
             }
-
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("metronomeMinusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(metronomeMinusButton);
 
         metronomePlusButton = new Button(this, "+", labelFont12, 10, 15, 744, 48, Color.darkGray, Color.white);
         metronomePlusButton.setBackgroundColor(Color.darkGray);
-        metronomePlusButton.addButtonListener(new ButtonAdapter() {
+        metronomePlusButton.addButtonListener(new ButtonAdapter()
+        {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                metronomeDisplay.setText("" + (Integer.parseInt(metronomeDisplay.getText())+1));
-                System.out.println("metronomePlusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+                if(Metronome.bpm < 400)
+                {
+                    Metronome.bpm++;
+                    metronomeDisplay.setText(Metronome.getBPM());
+                }
             }
-
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("metronomePlusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(metronomePlusButton);
 
         metronomeOnOffSwitch = new ToggleButton(this, 20, 36,768, 12,
                 Color.black, Color.white, Color.green, ToggleButton.DIRECTION.vertical);
-        metronomeOnOffSwitch.addButtonListener(new ButtonAdapter(){
+        metronomeOnOffSwitch.addButtonListener(new ButtonAdapter()
+        {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                //Erik, this is where you will call start or stop depending on the
-                //state of the metronmeOnOffSwitch.isOn() return value
-                if(metronomeOnOffSwitch.isOn()){
-                    System.out.println("metronomeOnOffSwitch is on!");
-                }else{
-                    System.out.println("metronomeOnOffSwitch is off!");
-                }
-
+            public void mousePressed(PApplet pApplet)
+            {
+                    if (metro == null)
+                    {
+                        metro = new Metronome();
+                        Thread t = new Thread(metro);
+                        t.start();
+                    }
+                    else
+                    {
+                        metro.end();
+                        metro = null;
+                    }
             }
-
             @Override
             public void mouseReleased(PApplet pApplet) {}
         });
@@ -393,7 +399,7 @@ public class MainWindow extends PApplet {
 
         //create the strip of midi player buttons
         midiPlayerButtons = new AudioButtons(this, 150, 20,
-                170,66,Color.yellow, Color.white, AudioButtons.LAYOUT.horizontal);
+                170,66,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         midiPlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -421,6 +427,12 @@ public class MainWindow extends PApplet {
         midiPlayerButtons.addRecordButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
+                //change background color of record button on click
+                if(midiPlayerButtons.isRecording){
+                    midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.record, Color.red);
+                }else{
+                    midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.record, Color.white);
+                }
                 System.out.println("midi record button clicked!");
             }
             @Override
@@ -434,7 +446,7 @@ public class MainWindow extends PApplet {
 
         //create the strip of mp3 player buttons
         mp3PlayerButtons = new AudioButtons(this, 150, 20,
-                170,114,Color.yellow, Color.white, AudioButtons.LAYOUT.horizontal);
+                170,114,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         mp3PlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
