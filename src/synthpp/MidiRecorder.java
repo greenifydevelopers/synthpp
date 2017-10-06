@@ -13,6 +13,7 @@ import java.util.Vector;
 public class MidiRecorder {
     private Sequence seq = null;
     private Track track = null;
+    //this buffer is maintained have quick access to an array of notes in the track
     private ArrayList<Integer> noteBuffer;
 
     public MidiRecorder(){
@@ -31,12 +32,8 @@ public class MidiRecorder {
         noteBuffer.add(noteNumber);
     }
 
-    public int[] getNoteBuffer(){
-        int notes[] = new int[noteBuffer.size()];
-        for(int i = 0; i < noteBuffer.size(); i++){
-            notes[i] = noteBuffer.get(i);
-        }
-        return notes;
+    public Integer[] getNoteBuffer(){
+        return noteBuffer.toArray(new Integer[noteBuffer.size()]);
     }
 
     public void deleteNoteAt(int tickIndex){
@@ -44,9 +41,11 @@ public class MidiRecorder {
         noteBuffer.remove(tickIndex);
     }
 
+    //delete old track and start a new one - all notes will be lost
     public void createNewTrack(){
         track = null;
         track = seq.createTrack();
+        noteBuffer.clear();
     }
 
     public void saveToFile(String filename){
