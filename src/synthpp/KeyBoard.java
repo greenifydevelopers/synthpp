@@ -1,7 +1,7 @@
 package synthpp;
 
-import ddf.minim.AudioOutput;
-import ddf.minim.signals.SineWave;
+//import ddf.minim.AudioOutput;
+//import ddf.minim.signals.SineWave;
 import processing.core.PApplet;
 import javax.sound.midi.*;
 
@@ -38,7 +38,7 @@ public class KeyBoard {
 
     //private AudioOutput out;
 
-    public KeyBoard(PApplet pApplet, AudioOutput out, int xPositoin, int yPosition, int width, int height){
+    public KeyBoard(PApplet pApplet, int xPositoin, int yPosition, int width, int height){
         this.parent = pApplet;
         //this.out = out;
         this.xPosition = xPositoin;

@@ -7,14 +7,14 @@ package synthpp;
 import processing.core.PApplet;
 import processing.core.PFont;
 import javax.sound.midi.*;
-import ddf.minim.*;
-import ddf.minim.signals.*;
+//import ddf.minim.*;
+//import ddf.minim.signals.*;
 
 
 /**
  * Created by Steven on 8/27/2017.
  */
-public class MainWindow extends PApplet {
+public class MainWindow {
 
     public static void main(String[] args) {
         try
@@ -49,11 +49,8 @@ public class MainWindow extends PApplet {
         }
         //PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
+
     private int high;
-    private Minim minim;
-    private AudioOutput out;
-    private SineWave sine;
-    private SineWave nullSine;
 
     private float freq = 0;
     private int keysPressed = 0;
@@ -67,15 +64,10 @@ public class MainWindow extends PApplet {
 
     @Override
     public void setup(){
-        minim = new Minim(this);
 
-        out = minim.getLineOut(Minim.STEREO);
-        nullSine= new SineWave(0, 0, out.sampleRate());
-        sine = new SineWave(0, amp, out.sampleRate());
-        sine.portamento(port);
 
         //create instance of a KeyBoard, initilize and draw it
-        keyBoard = new KeyBoard(this, out,70,150, 405, 100);
+        keyBoard = new KeyBoard(this,70,150, 405, 100);
         keyBoard.init();
         keyBoard.draw();
 
@@ -128,4 +120,5 @@ public class MainWindow extends PApplet {
         minim.stop();
         super.stop();
     }
+
 }
