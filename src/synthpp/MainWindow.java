@@ -10,7 +10,9 @@ import processing.core.PFont;
 import ddf.minim.*;
 import ddf.minim.signals.*;
 
+import javax.sound.sampled.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -395,9 +397,34 @@ public class MainWindow extends PApplet {
         midiPlayerButtons = new AudioButtons(this, 150, 20,
                 170,66,Color.yellow, Color.white, AudioButtons.LAYOUT.horizontal);
         midiPlayerButtons.addPlayButtonListener(new ButtonAdapter() {
+
+            //File wavFile;
+            public Clip clip;
+            public AudioInputStream audioInputStream;
+
             @Override
             public void mousePressed(PApplet pApplet) {
                 System.out.println("midi play button clicked!");
+
+                play();
+            }
+
+            public void play() {
+                try {
+                    //audioInputStream = AudioSystem.getAudioInputStream(wavFile);
+                    audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("sounds/file.wav")); // put the music here
+
+                    try {
+                        clip = AudioSystem.getClip();
+                        clip.open(audioInputStream);
+                        clip.loop(20000);
+                        clip.start();
+
+                    } catch (LineUnavailableException e) {
+                    }
+
+                } catch (UnsupportedAudioFileException | IOException e) {
+                }
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
