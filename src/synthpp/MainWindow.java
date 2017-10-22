@@ -7,9 +7,6 @@ package synthpp;
 import processing.core.PApplet;
 import processing.core.PFont;
 
-import ddf.minim.*;
-import ddf.minim.signals.*;
-
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -24,13 +21,11 @@ public class MainWindow extends PApplet {
     }
     private Metronome metro;
     private int high;
-    private Minim minim;
-    private AudioOutput out;
+
     private int mWidth = 800;
     private int mHeight = 370;
 
-    private SineWave sine;
-    private SineWave nullSine;
+
 
     private float freq = 0;
     private int keysPressed = 0;
@@ -88,16 +83,8 @@ public class MainWindow extends PApplet {
         ///***************************************
 
 
-        //set the minim object
-        minim = new Minim(this);
-        surface.setResizable(false);
-        out = minim.getLineOut(Minim.STEREO);
-        nullSine= new SineWave(0, 0, out.sampleRate());
-        sine = new SineWave(0, amp, out.sampleRate());
-        sine.portamento(port);
-
         //create instance of a KeyBoard, initilize it
-        keyBoard = new KeyBoard(this, out,10,sketchHeight()-(mHeight/2) - 40, mWidth -145, mHeight/2 -10);
+        keyBoard = new KeyBoard(this, 10,sketchHeight()-(mHeight/2) - 40, mWidth -145, mHeight/2 -10);
         keyBoard.init();
 
     }
@@ -142,7 +129,7 @@ public class MainWindow extends PApplet {
         background(Color.darkGray.getRGB());
 
         //draw controls
-        waveScreen.draw(out);
+        waveScreen.draw();
         keyBoard.draw();
         titleLabel.draw();
         playingMidiLabel.draw();
@@ -185,9 +172,6 @@ public class MainWindow extends PApplet {
 
     @Override
     public void stop(){
-        // always close Minim audio classes when you are finished with them
-        out.close();
-        minim.stop();
         super.stop();
     }
 
