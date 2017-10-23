@@ -1,8 +1,11 @@
 package synthpp;
 
-import ddf.minim.AudioOutput;
-import ddf.minim.signals.SineWave;
 import processing.core.PApplet;
+
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Synthesizer;
 
 import java.awt.*;
 
@@ -29,16 +32,28 @@ public class KeyBoard {
     private int keysPressed = 0;
     private float MAXAMP = 1.0f;
 
-    private AudioOutput out;
+    private Synthesizer synth;
+    private int defaultChannel = 1;
+    private MidiChannel channel;
+    private int tickIndex = 0;
 
-    public KeyBoard(PApplet pApplet, AudioOutput out, int xPositoin, int yPosition, int width, int height){
+
+    public KeyBoard(PApplet pApplet, int xPositoin, int yPosition, int width, int height){
         this.parent = pApplet;
-        this.out = out;
         this.xPosition = xPositoin;
         this.yPosition = yPosition;
         this.width = width;
         this.height = height;
         octave = 7;
+
+        try {
+            this.synth = MidiSystem.getSynthesizer();
+            this.synth.open();
+        }catch(MidiUnavailableException e){
+            e.printStackTrace();
+        }
+        channel = synth.getChannels()[defaultChannel];
+
     }
 
     public void setOctave(int octave){
@@ -50,7 +65,6 @@ public class KeyBoard {
 
     public void keyPressed(char key){
         keysPressed = 0;
-        out.clearSignals();
         for(int i=0;i<keys.length;i++){
             if(Character.toUpperCase(key) == keys[i]){
                 keyStates[i] = true;
@@ -65,13 +79,14 @@ public class KeyBoard {
 
         for(int i=0;i<keys.length;i++){
             if(keyStates[i]){
-                out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
+                int noteNum = (int)(69 + 12 * Math.log(tones[i]/440));
+                channel.noteOn(noteNum,125 );
             }
         }
     }
     public void keyReleased(char key){
         keysPressed = 0;
-        out.clearSignals();
+
         for(int i=0;i<keys.length;i++)
         {
             if(Character.toUpperCase(key) == keys[i])
@@ -89,7 +104,8 @@ public class KeyBoard {
 
         for(int i=0;i<keys.length;i++){
             if(keyStates[i]){
-                out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
+                int noteNum = (int)(69 + 12 * Math.log(tones[i]/440));
+                channel.noteOff(noteNum);
             }
         }
     }
