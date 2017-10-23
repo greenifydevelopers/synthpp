@@ -35,7 +35,10 @@ public class KeyBoard {
     private Synthesizer synth;
     private int defaultChannel = 1;
     private MidiChannel channel;
-    private int tickIndex = 0;
+    private int tickIndex = 0; //tracks midi sequence ticks when recording
+
+    private MidiRecorder midiRecorder;
+    private boolean record;
 
 
     public KeyBoard(PApplet pApplet, int xPositoin, int yPosition, int width, int height){
@@ -53,7 +56,8 @@ public class KeyBoard {
             e.printStackTrace();
         }
         channel = synth.getChannels()[defaultChannel];
-
+        midiRecorder = null;
+        record = false;
     }
 
     public void setOctave(int octave){
@@ -61,6 +65,16 @@ public class KeyBoard {
             this.octave = octave;
             shiftOctave();
         }
+    }
+
+    //if this is set to true and a MidiRecorder has been registered the the
+    //notes will be recorded to the registered MidiRecorder
+    public void recordNotes(boolean r){
+        record = r;
+    }
+
+    public void registerRecorder(MidiRecorder recorder){
+        midiRecorder = recorder;
     }
 
     public void keyPressed(char key){
@@ -81,6 +95,9 @@ public class KeyBoard {
             if(keyStates[i]){
                 int noteNum = (int)(69 + 12 * Math.log(tones[i]/440));
                 channel.noteOn(noteNum,125 );
+                if(midiRecorder != null && record){
+                    midiRecorder.addNote(noteNum,125, tickIndex++,defaultChannel);
+                }
             }
         }
     }

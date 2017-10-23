@@ -8,7 +8,10 @@ import processing.core.PApplet;
 import processing.core.PFont;
 
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
+
+import static jogamp.common.os.elf.SectionArmAttributes.Tag.File;
 
 
 /**
@@ -25,7 +28,9 @@ public class MainWindow extends PApplet {
     private int mWidth = 800;
     private int mHeight = 370;
 
-
+    private MidiRecorder midiRecorder;
+    private String saveFileName;
+    private String saveFilePath;
 
     private float freq = 0;
     private int keysPressed = 0;
@@ -75,6 +80,7 @@ public class MainWindow extends PApplet {
     public void setup(){
         surface.setResizable(false);
         clickables = new ArrayList<>();
+        midiRecorder = new MidiRecorder();
 
         ////***************Build GUI**************
 
@@ -83,10 +89,10 @@ public class MainWindow extends PApplet {
         ///***************************************
 
 
-        //create instance of a KeyBoard, initilize it
+        //create instance of a KeyBoard, initilize it, and register a MidiRecorder
         keyBoard = new KeyBoard(this, 10,sketchHeight()-(mHeight/2) - 40, mWidth -145, mHeight/2 -10);
         keyBoard.init();
-
+        keyBoard.registerRecorder(midiRecorder); //now we will be able to record our notes played
     }
     @Override
     public void settings() {
@@ -356,6 +362,7 @@ public class MainWindow extends PApplet {
         saveMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
+                pApplet.selectOutput("Select a file to write to:", "fileSelected", null, pApplet);
                 System.out.println("saveMidi pressed");
             }
             @Override
@@ -364,6 +371,8 @@ public class MainWindow extends PApplet {
             }
 
         });
+
+
         //add to clickables arraylist
         clickables.add(saveMidi);
         loadMP3 = new Button(this, "Load", labelFont15, 20, 10, 120, 114, Color.darkGray, Color.white);
@@ -414,8 +423,10 @@ public class MainWindow extends PApplet {
                 //change background color of record button on click
                 if(midiPlayerButtons.isRecording){
                     midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.record, Color.red);
+                    keyBoard.recordNotes(true);
                 }else{
                     midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.record, Color.white);
+                    keyBoard.recordNotes(false);
                 }
                 System.out.println("midi record button clicked!");
             }
@@ -464,4 +475,16 @@ public class MainWindow extends PApplet {
         clickables.add(mp3PlayerButtons.getPauseButtonReference());
         clickables.add(mp3PlayerButtons.getRecordButtonReference());
     }
+
+    public void fileSelected(File selection) {
+        if (selection == null) {
+            println("Window was closed or the user hit cancel.");
+        } else {
+            saveFileName = selection.getName();
+            saveFilePath = selection.getAbsolutePath();
+            midiRecorder.saveToFile(saveFilePath);
+            println("saved to file " +  saveFilePath);
+        }
+    }
+
 }
