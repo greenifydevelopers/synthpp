@@ -202,7 +202,7 @@ public class MainWindow extends PApplet
 
 
         midiSectionLabel = new TextLabel(this,"MIDI", labelFont15,
-                10,66,30,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
+                10,70,30,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
                 0);
         midiSectionLabel.setBackgroundColor(Color.darkGray);
         midiSectionLabel.setForegroundColor(Color.WHITE);
@@ -348,7 +348,7 @@ public class MainWindow extends PApplet
 
 
         //be sure to add anything that needs mouse clicks to the clickables arraylist
-        loadMidi = new Button(this, "Load", labelFont15, 40, 10, 77, 66, Color.darkGray, Color.white);
+        loadMidi = new Button(this, "Load", labelFont15, 40, 10, 77, 70, Color.darkGray, Color.white);
         loadMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -363,7 +363,7 @@ public class MainWindow extends PApplet
         });
         //add to clickables arraylist
         clickables.add(loadMidi);
-        saveMidi = new Button(this, "Save", labelFont15, 10, 10, 122, 66, Color.darkGray, Color.white);
+        saveMidi = new Button(this, "Save", labelFont15, 10, 10, 122, 70, Color.darkGray, Color.white);
         saveMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -399,7 +399,7 @@ public class MainWindow extends PApplet
 
         //create the strip of midi player buttons
         midiPlayerButtons = new AudioButtons(this, 150, 20,
-                170,66,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
+                170,70,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         midiPlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -454,7 +454,7 @@ public class MainWindow extends PApplet
 
         //create the strip of mp3 player buttons
         mp3PlayerButtons = new AudioButtons(this, 150, 20,
-                170,114,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
+                170,117,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         mp3PlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
