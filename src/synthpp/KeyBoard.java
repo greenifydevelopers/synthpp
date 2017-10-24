@@ -31,6 +31,7 @@ public class KeyBoard {
     private int height;
     private int keysPressed = 0;
     private float MAXAMP = 1.0f;
+    private int[] noteNums = {0,1,2,3,4,5,6,7,8,9,10,11,12};
 
     private Synthesizer synth;
     private int defaultChannel = 1;
@@ -56,6 +57,10 @@ public class KeyBoard {
 
     }
 
+    public int getOctave(){
+        return octave;
+    }
+
     public void setOctave(int octave){
         if(octave >= -1 && octave <= 11) {
             this.octave = octave;
@@ -79,7 +84,7 @@ public class KeyBoard {
 
         for(int i=0;i<keys.length;i++){
             if(keyStates[i]){
-                int noteNum = (int)(69 + 12 * Math.log(tones[i]/440));
+                int noteNum = (noteNums[i] + 12 * octave);
                 channel.noteOn(noteNum,125 );
             }
         }
@@ -104,7 +109,7 @@ public class KeyBoard {
 
         for(int i=0;i<keys.length;i++){
             if(keyStates[i]){
-                int noteNum = (int)(69 + 12 * Math.log(tones[i]/440));
+                int noteNum = (noteNums[i] + 12 * octave);
                 channel.noteOff(noteNum);
             }
         }

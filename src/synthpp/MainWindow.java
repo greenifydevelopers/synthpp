@@ -313,6 +313,8 @@ public class MainWindow extends PApplet {
             @Override
             public void mousePressed(PApplet pApplet) {
                 System.out.println("octaveMinusButton pressed");
+                keyBoard.setOctave(keyBoard.getOctave() - 1);
+
             }
 
             @Override
@@ -327,6 +329,7 @@ public class MainWindow extends PApplet {
             @Override
             public void mousePressed(PApplet pApplet) {
                 System.out.println("octavePlusButton pressed");
+                keyBoard.setOctave(keyBoard.getOctave() + 1);
             }
 
             @Override
