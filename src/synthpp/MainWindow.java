@@ -296,7 +296,7 @@ public class MainWindow extends PApplet {
         });
         clickables.add(metronomeOnOffSwitch);
 
-        octaveDisplay = new TextLabel(this,"4-5", labelFont28,
+        octaveDisplay = new TextLabel(this, KeyBoard.printOctave(), labelFont28,
                 655,74,100,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center,
                 0);
         octaveDisplay.setBackgroundColor(screenColor);
@@ -311,28 +311,30 @@ public class MainWindow extends PApplet {
         octaveMinusButton.setBackgroundColor(Color.darkGray);
         octaveMinusButton.addButtonListener(new ButtonAdapter() {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                System.out.println("octaveMinusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+                KeyBoard.octave--;
+                keyBoard.setOctave(KeyBoard.octave--);
+                octaveDisplay.setText(keyBoard.printOctave());
             }
 
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("octaveMinusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(octaveMinusButton);
         octavePlusButton = new Button(this, "+", labelFont12, 10, 15, 744, 112, Color.darkGray, Color.white);
         octavePlusButton.setBackgroundColor(Color.darkGray);
         octavePlusButton.addButtonListener(new ButtonAdapter() {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                System.out.println("octavePlusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+                KeyBoard.octave++;
+                keyBoard.setOctave(KeyBoard.octave++);
+                octaveDisplay.setText(keyBoard.printOctave());
             }
 
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("octavePlusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(octavePlusButton);
 

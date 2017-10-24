@@ -21,7 +21,7 @@ public class KeyBoard {
     private float[] tones;
     private char keys[] = {'A','W','S','E','D','F','T','G','Y','H','U','J','K'};
     private String notes[] = {"C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B","C"};
-    private int octave = 7;
+    static int octave = 7;
     private boolean keyStates[];
     private PApplet parent;
     private boolean isInitialized = false;
@@ -61,6 +61,16 @@ public class KeyBoard {
             this.octave = octave;
             shiftOctave();
         }
+    }
+
+    public int getOctave()
+    {
+        return this.octave;
+    }
+
+    public static String printOctave()
+    {
+        return Integer.toString(octave) + "-" + Integer.toString(octave + 1);
     }
 
     public void keyPressed(char key){
