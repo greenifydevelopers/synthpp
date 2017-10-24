@@ -15,13 +15,14 @@ import java.awt.*;
 public class KeyBoard {
 
     private KeyButton buttons[];
-    private float[] referenceTones = {8.1757989156f, 8.6619572180f, 9.1770239974f, 9.7227182413f,
-            10.3008611535f, 10.9133822323f, 11.5623257097f, 12.2498573744f,
-            12.9782717994f,13.7500000000f,14.5676175474f,15.4338531643f,16.3515978312f};
+    //private float[] referenceTones = {8.1757989156f, 8.6619572180f, 9.1770239974f, 9.7227182413f,
+      //      10.3008611535f, 10.9133822323f, 11.5623257097f, 12.2498573744f,
+        //    12.9782717994f,13.7500000000f,14.5676175474f,15.4338531643f,16.3515978312f};
+    private int[] referenceTones = {0,1,2,3,4,5,6,7,8,9,10,11,12};
     private float[] tones;
     private char keys[] = {'A','W','S','E','D','F','T','G','Y','H','U','J','K'};
     private String notes[] = {"C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B","C"};
-    private int octave = 7;
+    private int octave = 5;
     private boolean keyStates[];
     private PApplet parent;
     private boolean isInitialized = false;
@@ -67,6 +68,11 @@ public class KeyBoard {
         }
     }
 
+    public int getOctave()
+    {
+        return this.octave;
+    }
+
     //if this is set to true and a MidiRecorder has been registered the the
     //notes will be recorded to the registered MidiRecorder
     public void recordNotes(boolean r){
@@ -93,7 +99,7 @@ public class KeyBoard {
 
         for(int i=0;i<keys.length;i++){
             if(keyStates[i]){
-                int noteNum = (int)(69 + 12 * Math.log(tones[i]/440));
+                int noteNum = referenceTones[i];
                 channel.noteOn(noteNum,125 );
                 if(midiRecorder != null && record){
                     midiRecorder.addNote(noteNum,125, tickIndex++,defaultChannel);
@@ -183,8 +189,8 @@ public class KeyBoard {
 
     //helper function
     private void shiftOctave(){
-        for(int i = 0; i < tones.length; ++i){
-            tones[i] =  (float)(referenceTones[i] * Math.pow(2,((octave*11)/12)));
+        for(int i = 0; i < referenceTones.length; ++i){
+            referenceTones[i] = i + (12 * octave);
         }
     }
 

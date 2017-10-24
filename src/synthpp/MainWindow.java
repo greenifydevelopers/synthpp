@@ -1,9 +1,5 @@
 package synthpp;
 
-
-/**
- * Created by Steven on 8/30/2017.
- */
 import processing.core.PApplet;
 import processing.core.PFont;
 
@@ -11,13 +7,11 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
+public class MainWindow extends PApplet
+{
 
-/**
- * Created by Steven on 8/27/2017.
- */
-public class MainWindow extends PApplet {
-
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
     private Metronome metro;
@@ -78,23 +72,23 @@ public class MainWindow extends PApplet {
     //********************************************
 
     @Override
-    public void setup(){
+    public void setup()
+    {
         surface.setResizable(false);
         clickables = new ArrayList<>();
         midiRecorder = new MidiRecorder();
         midiPlayer = new MidiPlayer();
+
+        //create instance of a KeyBoard, initilize it, and register a MidiRecorder
+        keyBoard = new KeyBoard(this, 10,sketchHeight()-(mHeight/2) - 40, mWidth -145, mHeight/2 -10);
+        keyBoard.init();
+        keyBoard.registerRecorder(midiRecorder); //now we will be able to record our notes played
 
         ////***************Build GUI**************
 
         drawGUI();
 
         ///***************************************
-
-
-        //create instance of a KeyBoard, initilize it, and register a MidiRecorder
-        keyBoard = new KeyBoard(this, 10,sketchHeight()-(mHeight/2) - 40, mWidth -145, mHeight/2 -10);
-        keyBoard.init();
-        keyBoard.registerRecorder(midiRecorder); //now we will be able to record our notes played
     }
     @Override
     public void settings() {
@@ -304,7 +298,7 @@ public class MainWindow extends PApplet {
         });
         clickables.add(metronomeOnOffSwitch);
 
-        octaveDisplay = new TextLabel(this,"4-5", labelFont28,
+        octaveDisplay = new TextLabel(this,Integer.toString(keyBoard.getOctave()), labelFont28,
                 655,74,100,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center,
                 0);
         octaveDisplay.setBackgroundColor(screenColor);
@@ -319,28 +313,36 @@ public class MainWindow extends PApplet {
         octaveMinusButton.setBackgroundColor(Color.darkGray);
         octaveMinusButton.addButtonListener(new ButtonAdapter() {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                System.out.println("octaveMinusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+                if(keyBoard.getOctave() <= 10 && keyBoard.getOctave() > 1)
+                {
+                    int octaveForGUI = keyBoard.getOctave();
+                    keyBoard.setOctave(octaveForGUI - 1);
+                    octaveDisplay.setText(Integer.toString(octaveForGUI - 1));
+                }
             }
 
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("octaveMinusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) { }
         });
         clickables.add(octaveMinusButton);
         octavePlusButton = new Button(this, "+", labelFont12, 10, 15, 744, 112, Color.darkGray, Color.white);
         octavePlusButton.setBackgroundColor(Color.darkGray);
         octavePlusButton.addButtonListener(new ButtonAdapter() {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                System.out.println("octavePlusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+                if(keyBoard.getOctave() < 10 && keyBoard.getOctave() >= 1)
+                {
+                    int octaveForGUI = keyBoard.getOctave();
+                    keyBoard.setOctave(octaveForGUI + 1);
+                    octaveDisplay.setText(Integer.toString(octaveForGUI + 1));
+                }
             }
 
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("octavePlusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(octavePlusButton);
 
