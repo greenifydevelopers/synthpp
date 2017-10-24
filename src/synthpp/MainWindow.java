@@ -243,11 +243,11 @@ public class MainWindow extends PApplet {
             @Override
             public void mousePressed(PApplet pApplet)
             {
-               if(Metronome.bpm > 30)
-               {
-                   Metronome.bpm--;
-                   metronomeDisplay.setText(Metronome.getBPM());
-               }
+                if(Metronome.bpm > 30)
+                {
+                    Metronome.bpm--;
+                    metronomeDisplay.setText(Metronome.getBPM());
+                }
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
@@ -279,17 +279,17 @@ public class MainWindow extends PApplet {
             @Override
             public void mousePressed(PApplet pApplet)
             {
-                    if (metro == null)
-                    {
-                        metro = new Metronome();
-                        Thread t = new Thread(metro);
-                        t.start();
-                    }
-                    else
-                    {
-                        metro.end();
-                        metro = null;
-                    }
+                if (metro == null)
+                {
+                    metro = new Metronome();
+                    Thread t = new Thread(metro);
+                    t.start();
+                }
+                else
+                {
+                    metro.end();
+                    metro = null;
+                }
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
