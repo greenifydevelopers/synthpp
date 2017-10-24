@@ -11,8 +11,6 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
-import static jogamp.common.os.elf.SectionArmAttributes.Tag.File;
-
 
 /**
  * Created by Steven on 8/27/2017.
@@ -28,9 +26,12 @@ public class MainWindow extends PApplet {
     private int mWidth = 800;
     private int mHeight = 370;
 
+    private MidiPlayer midiPlayer;
+    private String openFilename;
+    private String openFilepath;
     private MidiRecorder midiRecorder;
-    private String saveFileName;
-    private String saveFilePath;
+    private String saveFilename;
+    private String saveFilepath;
 
     private float freq = 0;
     private int keysPressed = 0;
@@ -81,6 +82,7 @@ public class MainWindow extends PApplet {
         surface.setResizable(false);
         clickables = new ArrayList<>();
         midiRecorder = new MidiRecorder();
+        midiPlayer = new MidiPlayer();
 
         ////***************Build GUI**************
 
@@ -348,12 +350,13 @@ public class MainWindow extends PApplet {
         loadMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("loadMidi pressed");
+                //set these to null for the next loading
+                openFilename = null;
+                openFilepath = null;
+                pApplet.selectInput("Select a file to open:", "openMidiFile", null, pApplet);
             }
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("loadMidi released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
 
         });
         //add to clickables arraylist
@@ -362,8 +365,10 @@ public class MainWindow extends PApplet {
         saveMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                pApplet.selectOutput("Select a file to write to:", "fileSelected", null, pApplet);
-                System.out.println("saveMidi pressed");
+                //set these to null for the next saving
+                saveFilepath = null;
+                saveFilename = null;
+                pApplet.selectOutput("Select a file to save to:", "saveMidiFile", null, pApplet);
             }
             @Override
             public void mouseReleased(PApplet pApplet) {
@@ -396,6 +401,10 @@ public class MainWindow extends PApplet {
         midiPlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
+                midiPlayer.play();
+                if(midiPlayer.isPlaying()) {
+                    midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.play, Color.green);
+                }
                 System.out.println("midi play button clicked!");
             }
             @Override
@@ -404,14 +413,16 @@ public class MainWindow extends PApplet {
         midiPlayerButtons.addStopButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("midi stop button clicked!");
+                midiPlayer.stop();
+                midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.play, Color.white);
             }
             @Override
-            public void mouseReleased(PApplet pApplet) {}
+            public void mouseReleased(PApplet pApplet) { }
         });
         midiPlayerButtons.addPauseButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
+                midiPlayer.pause();
                 System.out.println("midi pause button clicked!");
             }
             @Override
@@ -476,15 +487,25 @@ public class MainWindow extends PApplet {
         clickables.add(mp3PlayerButtons.getRecordButtonReference());
     }
 
-    public void fileSelected(File selection) {
-        if (selection == null) {
-            println("Window was closed or the user hit cancel.");
-        } else {
-            saveFileName = selection.getName();
-            saveFilePath = selection.getAbsolutePath();
-            midiRecorder.saveToFile(saveFilePath);
-            println("saved to file " +  saveFilePath);
+    public void saveMidiFile(File selection) {
+        if (selection != null) {
+            saveFilename = selection.getName();
+            saveFilepath = selection.getAbsolutePath();
+            midiRecorder.saveToFile(saveFilepath);
+            println("saved to file " + saveFilepath);
+
+        }else{
+            println("file selection is null");
         }
     }
-
+    public void openMidiFile(File selection) {
+        if (selection != null) {
+            openFilename = selection.getName();
+            openFilepath = selection.getAbsolutePath();
+            playingMidiLabel.setText(openFilename);
+            midiPlayer.load(openFilepath);
+        }else{
+            println("file selection is null");
+        }
+    }
 }
