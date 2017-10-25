@@ -14,9 +14,9 @@ public class KeyBoard {
     private KeyButton buttons[];
     private float[] referenceTones = {8.1757989156f, 8.6619572180f, 9.1770239974f, 9.7227182413f,
             10.3008611535f, 10.9133822323f, 11.5623257097f, 12.2498573744f,
-            12.9782717994f,13.7500000000f,14.5676175474f,15.4338531643f,32.7031956626f};
+            12.9782717994f,13.7500000000f,14.5676175474f,15.4338531643f,16.3515978312f};
     private float[] tones;
-    private char keys[] = {'A','W','S','E','D','F','R','G','Y','H','U','J','K'};
+    private char keys[] = {'A','W','S','E','D','F','T','G','Y','H','U','J','K'};
     private String notes[] = {"C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B","C"};
     private int octave = 7;
     private boolean keyStates[];
