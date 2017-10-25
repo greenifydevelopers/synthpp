@@ -1,36 +1,31 @@
 package synthpp;
 
-
-/**
- * Created by Steven on 8/30/2017.
- */
 import processing.core.PApplet;
 import processing.core.PFont;
 
-import ddf.minim.*;
-import ddf.minim.signals.*;
-
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 
+public class MainWindow extends PApplet
+{
 
-/**
- * Created by Steven on 8/27/2017.
- */
-public class MainWindow extends PApplet {
-
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
     private Metronome metro;
     private int high;
-    private Minim minim;
-    private AudioOutput out;
+
     private int mWidth = 800;
     private int mHeight = 370;
 
-    private SineWave sine;
-    private SineWave nullSine;
+    private MidiPlayer midiPlayer;
+    private String openFilename;
+    private String openFilepath;
+    private MidiRecorder midiRecorder;
+    private String saveFilename;
+    private String saveFilepath;
 
     private float freq = 0;
     private int keysPressed = 0;
@@ -77,29 +72,23 @@ public class MainWindow extends PApplet {
     //********************************************
 
     @Override
-    public void setup(){
+    public void setup()
+    {
         surface.setResizable(false);
         clickables = new ArrayList<>();
+        midiRecorder = new MidiRecorder();
+        midiPlayer = new MidiPlayer();
+
+        //create instance of a KeyBoard, initilize it, and register a MidiRecorder
+        keyBoard = new KeyBoard(this, 10,sketchHeight()-(mHeight/2) - 40, mWidth -145, mHeight/2 -10);
+        keyBoard.init();
+        keyBoard.registerRecorder(midiRecorder); //now we will be able to record our notes played
 
         ////***************Build GUI**************
 
         drawGUI();
 
         ///***************************************
-
-
-        //set the minim object
-        minim = new Minim(this);
-        surface.setResizable(false);
-        out = minim.getLineOut(Minim.STEREO);
-        nullSine= new SineWave(0, 0, out.sampleRate());
-        sine = new SineWave(0, amp, out.sampleRate());
-        sine.portamento(port);
-
-        //create instance of a KeyBoard, initilize it
-        keyBoard = new KeyBoard(this, out,10,sketchHeight()-(mHeight/2) - 40, mWidth -145, mHeight/2 -10);
-        keyBoard.init();
-
     }
     @Override
     public void settings() {
@@ -142,7 +131,7 @@ public class MainWindow extends PApplet {
         background(Color.darkGray.getRGB());
 
         //draw controls
-        waveScreen.draw(out);
+        waveScreen.draw();
         keyBoard.draw();
         titleLabel.draw();
         playingMidiLabel.draw();
@@ -185,9 +174,6 @@ public class MainWindow extends PApplet {
 
     @Override
     public void stop(){
-        // always close Minim audio classes when you are finished with them
-        out.close();
-        minim.stop();
         super.stop();
     }
 
@@ -216,7 +202,7 @@ public class MainWindow extends PApplet {
 
 
         midiSectionLabel = new TextLabel(this,"MIDI", labelFont15,
-                10,66,30,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
+                10,70,30,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
                 0);
         midiSectionLabel.setBackgroundColor(Color.darkGray);
         midiSectionLabel.setForegroundColor(Color.WHITE);
@@ -312,7 +298,7 @@ public class MainWindow extends PApplet {
         });
         clickables.add(metronomeOnOffSwitch);
 
-        octaveDisplay = new TextLabel(this,"4-5", labelFont28,
+        octaveDisplay = new TextLabel(this,Integer.toString(keyBoard.getOctave()), labelFont28,
                 655,74,100,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center,
                 0);
         octaveDisplay.setBackgroundColor(screenColor);
@@ -327,52 +313,64 @@ public class MainWindow extends PApplet {
         octaveMinusButton.setBackgroundColor(Color.darkGray);
         octaveMinusButton.addButtonListener(new ButtonAdapter() {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                System.out.println("octaveMinusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+                if(keyBoard.getOctave() <= 10 && keyBoard.getOctave() > 1)
+                {
+                    int octaveForGUI = keyBoard.getOctave();
+                    keyBoard.setOctave(octaveForGUI - 1);
+                    octaveDisplay.setText(Integer.toString(octaveForGUI - 1));
+                }
             }
 
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("octaveMinusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) { }
         });
         clickables.add(octaveMinusButton);
         octavePlusButton = new Button(this, "+", labelFont12, 10, 15, 744, 112, Color.darkGray, Color.white);
         octavePlusButton.setBackgroundColor(Color.darkGray);
         octavePlusButton.addButtonListener(new ButtonAdapter() {
             @Override
-            public void mousePressed(PApplet pApplet) {
-                System.out.println("octavePlusButton pressed");
+            public void mousePressed(PApplet pApplet)
+            {
+                if(keyBoard.getOctave() < 10 && keyBoard.getOctave() >= 1)
+                {
+                    int octaveForGUI = keyBoard.getOctave();
+                    keyBoard.setOctave(octaveForGUI + 1);
+                    octaveDisplay.setText(Integer.toString(octaveForGUI + 1));
+                }
             }
 
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("octavePlusButton released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(octavePlusButton);
 
 
         //be sure to add anything that needs mouse clicks to the clickables arraylist
-        loadMidi = new Button(this, "Load", labelFont15, 40, 10, 77, 66, Color.darkGray, Color.white);
+        loadMidi = new Button(this, "Load", labelFont15, 40, 10, 77, 70, Color.darkGray, Color.white);
         loadMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("loadMidi pressed");
+                //set these to null for the next loading
+                openFilename = null;
+                openFilepath = null;
+                pApplet.selectInput("Select a file to open:", "openMidiFile", null, pApplet);
             }
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("loadMidi released");
-            }
+            public void mouseReleased(PApplet pApplet) {}
 
         });
         //add to clickables arraylist
         clickables.add(loadMidi);
-        saveMidi = new Button(this, "Save", labelFont15, 10, 10, 122, 66, Color.darkGray, Color.white);
+        saveMidi = new Button(this, "Save", labelFont15, 10, 10, 122, 70, Color.darkGray, Color.white);
         saveMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("saveMidi pressed");
+                //set these to null for the next saving
+                saveFilepath = null;
+                saveFilename = null;
+                pApplet.selectOutput("Select a file to save to:", "saveMidiFile", null, pApplet);
             }
             @Override
             public void mouseReleased(PApplet pApplet) {
@@ -380,6 +378,8 @@ public class MainWindow extends PApplet {
             }
 
         });
+
+
         //add to clickables arraylist
         clickables.add(saveMidi);
         loadMP3 = new Button(this, "Load", labelFont15, 20, 10, 120, 114, Color.darkGray, Color.white);
@@ -399,10 +399,14 @@ public class MainWindow extends PApplet {
 
         //create the strip of midi player buttons
         midiPlayerButtons = new AudioButtons(this, 150, 20,
-                170,66,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
+                170,70,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         midiPlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
+                midiPlayer.play();
+                if(midiPlayer.isPlaying()) {
+                    midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.play, Color.green);
+                }
                 System.out.println("midi play button clicked!");
             }
             @Override
@@ -411,14 +415,16 @@ public class MainWindow extends PApplet {
         midiPlayerButtons.addStopButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("midi stop button clicked!");
+                midiPlayer.stop();
+                midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.play, Color.white);
             }
             @Override
-            public void mouseReleased(PApplet pApplet) {}
+            public void mouseReleased(PApplet pApplet) { }
         });
         midiPlayerButtons.addPauseButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
+                midiPlayer.pause();
                 System.out.println("midi pause button clicked!");
             }
             @Override
@@ -430,8 +436,10 @@ public class MainWindow extends PApplet {
                 //change background color of record button on click
                 if(midiPlayerButtons.isRecording){
                     midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.record, Color.red);
+                    keyBoard.recordNotes(true);
                 }else{
                     midiPlayerButtons.setButtonColor(AudioButtons.BUTTONTYPE.record, Color.white);
+                    keyBoard.recordNotes(false);
                 }
                 System.out.println("midi record button clicked!");
             }
@@ -446,7 +454,7 @@ public class MainWindow extends PApplet {
 
         //create the strip of mp3 player buttons
         mp3PlayerButtons = new AudioButtons(this, 150, 20,
-                170,114,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
+                170,117,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         mp3PlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -479,5 +487,27 @@ public class MainWindow extends PApplet {
         clickables.add(mp3PlayerButtons.getStopButtonReference());
         clickables.add(mp3PlayerButtons.getPauseButtonReference());
         clickables.add(mp3PlayerButtons.getRecordButtonReference());
+    }
+
+    public void saveMidiFile(File selection) {
+        if (selection != null) {
+            saveFilename = selection.getName();
+            saveFilepath = selection.getAbsolutePath();
+            midiRecorder.saveToFile(saveFilepath);
+            println("saved to file " + saveFilepath);
+
+        }else{
+            println("file selection is null");
+        }
+    }
+    public void openMidiFile(File selection) {
+        if (selection != null) {
+            openFilename = selection.getName();
+            openFilepath = selection.getAbsolutePath();
+            playingMidiLabel.setText(openFilename);
+            midiPlayer.load(openFilepath);
+        }else{
+            println("file selection is null");
+        }
     }
 }

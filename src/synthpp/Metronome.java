@@ -1,15 +1,19 @@
 package synthpp;
 
-import ddf.minim.AudioOutput;
-import ddf.minim.Minim;
+
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Synthesizer;
 
 public class Metronome extends Thread
 {
     private AtomicBoolean keepRunning;
     static double bpm = 120.0;
-    private Minim minim = new Minim(this);
-    AudioOutput out = minim.getLineOut(Minim.STEREO);
+    private Synthesizer synth;
+    private int defaultChannel = 1;
+    private MidiChannel channel;
 
     public static  String getBPM()
     {
@@ -18,9 +22,15 @@ public class Metronome extends Thread
     }
 
 
-    public Metronome()
-    {
+    public Metronome(){
         keepRunning = new AtomicBoolean(true);
+        try {
+            this.synth = MidiSystem.getSynthesizer();
+            this.synth.open();
+        }catch(MidiUnavailableException e){
+            e.printStackTrace();
+        }
+        channel = synth.getChannels()[defaultChannel];
     }
 
     public void end()
@@ -41,8 +51,8 @@ public class Metronome extends Thread
             {
                 e.printStackTrace();
             }
-
-            out.playNote(1250);
+            int noteNum = (int)(69 + 12 * Math.log(1280/440));
+            channel.noteOn(noteNum,125 );
         }
     }
 }
