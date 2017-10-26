@@ -70,15 +70,15 @@
   
   <target name="compile.module.synthpp" depends="compile.module.synthpp.production,compile.module.synthpp.tests" description="Compile module synthpp"/>
   
-  <target name="compile.module.synthpp.production" description="Compile module synthpp; production classes">
+  <target name="compile.module.synthpp.production" depends="register.custom.compilers" description="Compile module synthpp; production classes">
     <mkdir dir="${synthpp.output.dir}"/>
-    <javac destdir="${synthpp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+    <javac2 destdir="${synthpp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
       <compilerarg line="${compiler.args.synthpp}"/>
       <bootclasspath refid="synthpp.module.bootclasspath"/>
       <classpath refid="synthpp.module.production.classpath"/>
       <src refid="synthpp.module.sourcepath"/>
       <patternset refid="excluded.from.compilation.synthpp"/>
-    </javac>
+    </javac2>
     
     <copy todir="${synthpp.output.dir}">
       <fileset dir="${module.synthpp.basedir}/../src">
@@ -88,7 +88,7 @@
     </copy>
   </target>
   
-  <target name="compile.module.synthpp.tests" depends="compile.module.synthpp.production" description="compile module synthpp; test classes" unless="skip.tests"/>
+  <target name="compile.module.synthpp.tests" depends="register.custom.compilers,compile.module.synthpp.production" description="compile module synthpp; test classes" unless="skip.tests"/>
   
   <target name="clean.module.synthpp" description="cleanup module">
     <delete dir="${synthpp.output.dir}"/>
