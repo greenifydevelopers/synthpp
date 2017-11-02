@@ -25,11 +25,22 @@ public class MidiRecorder {
         track = seq.createTrack();
         noteBuffer = new ArrayList<>();
     }
-
-
-    public void addNote(int noteNumber,int velocity, long tickIndex, int channel){
-        track.add(createNoteOnEvent(noteNumber, velocity, tickIndex, channel));
-        noteBuffer.add(noteNumber);
+    /**
+     * @param noteNumber - number 1 and 127
+     * @param velocity - the speed with which the key was depressed
+     * @param tickIndex - index that he note should be placed in the track
+     * @param channel - the sound channel to play the note on
+     *
+     * @return - the notenumber added or -1 if it is invalid
+     * */
+    public int addNote(int noteNumber,int velocity, long tickIndex, int channel){
+        if(noteNumber >= 1 && noteNumber <= 127) {
+            track.add(createNoteOnEvent(noteNumber, velocity, tickIndex, channel));
+            noteBuffer.add(noteNumber);
+            return noteNumber;
+        }else{
+            return -1;
+        }
     }
 
     public Integer[] getNoteBuffer(){
