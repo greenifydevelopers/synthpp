@@ -9,15 +9,9 @@ import javax.sound.midi.Synthesizer;
 
 import java.awt.*;
 
-/**
- * Created by Steven on 9/5/2017.
- */
 public class KeyBoard {
 
     private KeyButton buttons[];
-    //private float[] referenceTones = {8.1757989156f, 8.6619572180f, 9.1770239974f, 9.7227182413f,
-      //      10.3008611535f, 10.9133822323f, 11.5623257097f, 12.2498573744f,
-        //    12.9782717994f,13.7500000000f,14.5676175474f,15.4338531643f,16.3515978312f};
     private int[] referenceTones = {0,1,2,3,4,5,6,7,8,9,10,11,12};
     private float[] tones;
     private char keys[] = {'A','W','S','E','D','F','T','G','Y','H','U','J','K'};
@@ -109,6 +103,7 @@ public class KeyBoard {
     }
     public void keyReleased(char key){
         keysPressed = 0;
+        channel.allSoundOff();
 
         for(int i=0;i<keys.length;i++)
         {

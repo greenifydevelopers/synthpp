@@ -22,7 +22,8 @@ public class Metronome extends Thread
     }
 
 
-    public Metronome(){
+    public Metronome()
+    {
         keepRunning = new AtomicBoolean(true);
         try {
             this.synth = MidiSystem.getSynthesizer();
@@ -35,6 +36,7 @@ public class Metronome extends Thread
 
     public void end()
     {
+        channel.setMute(true);
         keepRunning.set(false);
     }
 
