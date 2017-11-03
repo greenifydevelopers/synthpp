@@ -51,21 +51,25 @@ public class MidiRecorderTest {
     @Test
     @DisplayName("Get note buffer operation.")
     public void getNoteBuffer(){
-         assertEquals(1,1);
+
+        assertEquals(1,1);
     }
     @Test
     @DisplayName("Delete note operation.")
     public void deleteNoteAt(){
+
         assertEquals(1,1);
     }
     @Test
     @DisplayName("Crate new track operation.")
     public void createNewTrack(){
+
         assertEquals(1,1);
     }
     @Test
     @DisplayName("Save to file operation.")
     public void saveToFile(){
+
         assertEquals(1,1);
     }
 
