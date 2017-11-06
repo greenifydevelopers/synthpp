@@ -1,85 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="module_synthpp" default="compile.module.synthpp">
+<project name="module_synthpp" default="compile.module.synthpp" xmlns:jacoco="antlib:org.jacoco.ant">
   <dirname property="module.synthpp.basedir" file="${ant.file.module_synthpp}"/>
-  
-  
+
+
+
   <property name="compiler.args.synthpp" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
-  
+
   <property name="synthpp.output.dir" value="${module.synthpp.basedir}/../out/production/synthpp"/>
   <property name="synthpp.testoutput.dir" value="${module.synthpp.basedir}/../out/test/synthpp"/>
-  
+  <property name="synthpp.result.dir" value="${module.synthpp.basedir}/../out/result/synthpp"/>
+  <property name="result.classes.dir" value="${synthpp.result.dir}/classes"/>
+  <property name="result.report.dir" value="${synthpp.result.dir}/jacoco"/>
+  <property name="result.exec.file" value="${synthpp.result.dir}/jacoco.exec"/>
+
+  <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../libs/jacocoant.jar"/>
+
+
   <path id="synthpp.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
-  
+
   <path id="synthpp.module.production.classpath">
     <fileset dir="${basedir}/libs">
       <patternset refid="library.patterns"/>
     </fileset>
-    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-RC2.jar"/>
-    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-RC1.jar"/>
+    <pathelement location="${basedir}/libs/junit-jupiter-api-5.0.0-RC2.jar"/>
+    <pathelement location="${basedir}/libs/opentest4j-1.0.0-RC1.jar"/>
+    <pathelement location="${basedir}/libs/hamcrest-core-1.3.jar"/>
   </path>
-  
+
   <path id="synthpp.runtime.production.module.classpath">
     <pathelement location="${synthpp.output.dir}"/>
     <fileset dir="${basedir}/libs">
       <patternset refid="library.patterns"/>
     </fileset>
-    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-RC2.jar"/>
-    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-RC1.jar"/>
+    <pathelement location="${basedir}/libs/junit-jupiter-api-5.0.0-RC2.jar"/>
+    <pathelement location="${basedir}/libs/opentest4j-1.0.0-RC1.jar"/>
+    <pathelement location="${basedir}/libs/hamcrest-core-1.3.jar"/>
   </path>
-  
+
   <path id="synthpp.module.classpath">
     <pathelement location="${synthpp.output.dir}"/>
     <fileset dir="${basedir}/libs">
       <patternset refid="library.patterns"/>
     </fileset>
-    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-RC2.jar"/>
-    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-RC1.jar"/>
-    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-RC2.jar"/>
-    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-RC1.jar"/>
+    <pathelement location="${basedir}/libs/junit-jupiter-api-5.0.0-RC2.jar"/>
+    <pathelement location="${basedir}/libs/opentest4j-1.0.0-RC1.jar"/>
+    <pathelement location="${basedir}/libs/hamcrest-core-1.3.jar"/>
   </path>
-  
+
   <path id="synthpp.runtime.module.classpath">
     <pathelement location="${synthpp.testoutput.dir}"/>
     <pathelement location="${synthpp.output.dir}"/>
     <fileset dir="${basedir}/libs">
       <patternset refid="library.patterns"/>
     </fileset>
-    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-RC2.jar"/>
-    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-RC1.jar"/>
-    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-RC2.jar"/>
-    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-RC1.jar"/>
+    <pathelement location="${basedir}/libs/junit-jupiter-api-5.0.0-RC2.jar"/>
+    <pathelement location="${basedir}/libs/opentest4j-1.0.0-RC1.jar"/>
+    <pathelement location="${basedir}/libs/hamcrest-core-1.3.jar"/>
   </path>
-  
-  
+
+
   <patternset id="excluded.from.module.synthpp">
     <patternset refid="ignored.files"/>
   </patternset>
-  
+
   <patternset id="excluded.from.compilation.synthpp">
     <patternset refid="excluded.from.module.synthpp"/>
   </patternset>
-  
+
   <path id="synthpp.module.sourcepath">
     <dirset dir="${module.synthpp.basedir}/../../synthpp">
       <include name="src"/>
     </dirset>
   </path>
-  
-  
+
+  <path id="synthpp.module.test.sourcepath">
+    <dirset dir="${module.synthpp.basedir}/../../synthpp">
+      <include name="test"/>
+    </dirset>
+  </path>
+
+
+
   <target name="compile.module.synthpp" depends="compile.module.synthpp.production,compile.module.synthpp.tests" description="Compile module synthpp"/>
-  
+
   <target name="compile.module.synthpp.production" description="Compile module synthpp; production classes">
     <mkdir dir="${synthpp.output.dir}"/>
-    <javac destdir="${synthpp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+    <javac destdir="${synthpp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" includeantruntime="true">
       <compilerarg line="${compiler.args.synthpp}"/>
       <bootclasspath refid="synthpp.module.bootclasspath"/>
       <classpath refid="synthpp.module.production.classpath"/>
       <src refid="synthpp.module.sourcepath"/>
       <patternset refid="excluded.from.compilation.synthpp"/>
     </javac>
-    
+
     <copy todir="${synthpp.output.dir}">
       <fileset dir="${module.synthpp.basedir}/../src">
         <patternset refid="compiler.resources"/>
@@ -87,11 +102,68 @@
       </fileset>
     </copy>
   </target>
-  
-  <target name="compile.module.synthpp.tests" depends="compile.module.synthpp.production" description="compile module synthpp; test classes" unless="skip.tests"/>
-  
+
+  <target name="compile.module.synthpp.tests" depends="compile.module.synthpp.production" description="compile module synthpp; test classes" unless="skip.tests">
+    <mkdir dir="${synthpp.testoutput.dir}"/>
+    <javac destdir="${synthpp.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" includeantruntime="true">
+      <compilerarg line="${compiler.args.synthpp}"/>
+      <bootclasspath refid="synthpp.module.bootclasspath"/>
+      <classpath refid="synthpp.module.classpath"/>
+      <src refid="synthpp.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.synthpp"/>
+    </javac>
+
+    <copy todir="${synthpp.testoutput.dir}">
+      <fileset dir="${module.synthpp.basedir}/../test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
   <target name="clean.module.synthpp" description="cleanup module">
     <delete dir="${synthpp.output.dir}"/>
     <delete dir="${synthpp.testoutput.dir}"/>
   </target>
+
+
+
+  <target name="run.test" depends="compile.module.synthpp">
+    <jacoco:coverage destfile="${result.exec.file}">
+      <junit fork="yes" printsummary="yes" haltonfailure="no">
+        <classpath refid="synthpp.module.classpath"/>
+        <classpath>
+          <pathelement path="${synthpp.output.dir}"/>
+          <pathelement path="${synthpp.testoutput.dir}"/>
+        </classpath>
+        <formatter type="plain" />
+        <test name="MidiRecorderTest"/>
+      </junit>
+    </jacoco:coverage>
+  </target>
+
+  <target name="report" depends="run.test">
+    <mkdir dir="${synthpp.result.dir}"/>
+    <mkdir dir="${result.report.dir}"/>
+    <mkdir dir="${result.classes.dir}"/>
+  <jacoco:report>
+    <executiondata>
+      <file file="${result.exec.file}"/>
+    </executiondata>
+    <structure name="JaCoCo Ant">
+      <classfiles>
+        <fileset dir="${synthpp.output.dir}"/>
+        <fileset dir="${synthpp.testoutput.dir}"/>
+      </classfiles>
+      <sourcefiles encoding="UTF-8">
+        <fileset dir="${module.synthpp.basedir}/../src"/>
+      </sourcefiles>
+    </structure>
+    <!--  to produce reports in different formats.  -->
+    <html destdir="${result.report.dir}"/>
+    <csv destfile="${result.report.dir}/report.csv"/>
+    <xml destfile="${result.report.dir}/report.xml"/>
+  </jacoco:report>
+  </target>
+
 </project>
