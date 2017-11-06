@@ -22,6 +22,7 @@ public class MainWindow extends PApplet
     private int mHeight = 610; // was 610
 
     private MidiPlayer midiPlayer;
+    private MP3Player mp3Player;
     private String openFilename;
     private String openFilepath;
     private MidiRecorder midiRecorder;
@@ -385,12 +386,13 @@ public class MainWindow extends PApplet
         loadMP3.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("loadMP3 pressed");
+                //set these to null for the next loading
+                openFilename = null;
+                openFilepath = null;
+                pApplet.selectInput("Select a file to open:", "openMP3File", null, pApplet);
             }
             @Override
-            public void mouseReleased(PApplet pApplet) {
-                System.out.println("loadMP3 released");
-            }
+            public void mouseReleased(PApplet pApplet){}
 
         });
         //add to clickables arraylist
@@ -455,7 +457,9 @@ public class MainWindow extends PApplet
         mp3PlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("mp3 play button clicked!");
+                if(mp3Player != null){
+                    mp3Player.play();
+                }
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
@@ -463,7 +467,9 @@ public class MainWindow extends PApplet
         mp3PlayerButtons.addStopButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("mp3 stop button clicked!");
+                if(mp3Player != null){
+                    mp3Player.stop();
+                }
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
@@ -471,7 +477,9 @@ public class MainWindow extends PApplet
         mp3PlayerButtons.addPauseButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
-                System.out.println("mp3 pause button clicked!");
+                if(mp3Player != null) {
+                    mp3Player.pause();
+                }
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
@@ -503,6 +511,16 @@ public class MainWindow extends PApplet
             openFilepath = selection.getAbsolutePath();
             playingMidiLabel.setText(openFilename);
             midiPlayer.load(openFilepath);
+        }else{
+            println("file selection is null");
+        }
+    }
+    public void openMP3File(File selection) {
+        if (selection != null) {
+            openFilename = selection.getName();
+            openFilepath = selection.getAbsolutePath();
+            playingMP3Label.setText(openFilename);
+            mp3Player = new MP3Player(openFilepath);
         }else{
             println("file selection is null");
         }
