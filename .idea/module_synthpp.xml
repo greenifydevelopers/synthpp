@@ -152,7 +152,8 @@
     </executiondata>
     <structure name="JaCoCo Ant Example">
       <classfiles>
-        <fileset dir="${result.classes.dir}"/>
+        <fileset dir="${synthpp.output.dir}"/>
+        <fileset dir="${synthpp.testoutput.dir}"/>
       </classfiles>
       <sourcefiles encoding="UTF-8">
         <fileset dir="${module.synthpp.basedir}/../src"/>
