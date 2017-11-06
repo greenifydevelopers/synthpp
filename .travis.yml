@@ -5,4 +5,4 @@ jdk:
 script: ant
 
 after_success:
- -bash <(curl -s https://codecov.io/bash) -t repository-upload-token
+ -bash <(curl -s https://codecov.io/bash) -t 3824dccb-6bca-48f7-8f07-aac8bbf38505
