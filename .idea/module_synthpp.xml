@@ -2,9 +2,7 @@
 <project name="module_synthpp" default="compile.module.synthpp">
   <dirname property="module.synthpp.basedir" file="${ant.file.module_synthpp}"/>
   
-  <property name="module.jdk.home.synthpp" value="${project.jdk.home}"/>
-  <property name="module.jdk.bin.synthpp" value="${project.jdk.bin}"/>
-  <property name="module.jdk.classpath.synthpp" value="${project.jdk.classpath}"/>
+
   
   <property name="compiler.args.synthpp" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
   
