@@ -1,8 +1,9 @@
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.Before; //JUnit 4
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.Test; //JUnit 4
+
 import synthpp.MidiRecorder;
 
 import java.util.Random;
@@ -18,8 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MidiRecorderTest {
     private static MidiRecorder midiRecorder;
 
-    @BeforeAll
-    public static void initialize(){
+    //Change to BeforeAll for JUnit 5
+    @Before
+    public void initialize(){
         midiRecorder = new MidiRecorder();
     }
 
@@ -36,7 +38,7 @@ public class MidiRecorderTest {
         int belowRangeNote = random.nextInt(-1 + 1 + 999) - 999; //-999 to -1
         int overRangeNote = random.nextInt(999 + 1 + 128) - 128; //128 to 999
 
-        //this shoudld be valid and return the note added
+        //this should be valid and return the note added
         int ret = midiRecorder.addNote(inRangeNote,125,0,0);
             assertEquals(inRangeNote,ret);
 

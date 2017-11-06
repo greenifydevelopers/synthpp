@@ -1,10 +1,9 @@
-package test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class MainWindowTest {
-    @org.junit.jupiter.api.Test
-    void mousePressed() {
+public class MainWindowTest {
+    @org.junit.Test
+    public void mousePressed() {
+        assertEquals(true,true);
     }
 
 }
