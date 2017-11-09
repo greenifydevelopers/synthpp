@@ -202,7 +202,7 @@ public class MainWindow extends PApplet
         titleLabel.setForegroundColor(Color.white);
 
 
-        playingMidiLabel = new TextLabel(this,"MYSONG.MID", labelFont20,
+        playingMidiLabel = new TextLabel(this,"LOAD  MIDI", labelFont20,
                 20,115,250,35, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
                 5);
         playingMidiLabel.setBackgroundColor(screenColor);
@@ -215,7 +215,7 @@ public class MainWindow extends PApplet
         midiSectionLabel.setBackgroundColor(Color.darkGray);
         midiSectionLabel.setForegroundColor(Color.WHITE);
 
-        playingMP3Label = new TextLabel(this,"MMMBOP.MP3", labelFont20,
+        playingMP3Label = new TextLabel(this,"LOAD  MP3", labelFont20,
                 20,215,250,8, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
                 5);
         playingMP3Label.setBackgroundColor(screenColor);
