@@ -137,7 +137,11 @@
           <pathelement path="${synthpp.testoutput.dir}"/>
         </classpath>
         <formatter type="plain" />
-        <test name="MidiRecorderTest"/>
+        <batchtest fork="yes">
+          <fileset dir="test">
+            <include name="**/*Test.java"/>
+          </fileset>
+        </batchtest>
       </junit>
     </jacoco:coverage>
   </target>
