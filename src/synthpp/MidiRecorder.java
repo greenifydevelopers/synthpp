@@ -34,7 +34,7 @@ public class MidiRecorder {
      * @return - the notenumber added or -1 if it is invalid
      * */
     public int addNote(int noteNumber,int velocity, long tickIndex, int channel){
-        if(noteNumber >= 1 && noteNumber <= 127) {
+        if(noteNumber >= 0 && noteNumber <= 127) {
             track.add(createNoteOnEvent(noteNumber, velocity, tickIndex, channel));
             noteBuffer.add(noteNumber);
             return noteNumber;
