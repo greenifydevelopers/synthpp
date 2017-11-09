@@ -34,20 +34,27 @@ public class MidiRecorderTest {
 
         //randomly generate a note to add below, in, and over the range of valid notes
         Random random = new Random();
-        int inRangeNote = random.nextInt(127 + 1 + 0) - 0; //0 to 127
-        int belowRangeNote = random.nextInt(-1 + 1 + 999) - 999; //-999 to -1
-        int overRangeNote = random.nextInt(999 + 1 + 128) - 128; //128 to 999
+        int inRangeNote = random.nextInt(127 + 1 - 0) + 0; //0 to 127
+        int belowRangeNote = random.nextInt(-1 + 1 - (-999)) + (-999); //-999 to -1
+        int overRangeNote = random.nextInt(999 + 1 - 128) + 128; //128 to 999
 
         //this should be valid and return the note added
+        System.out.print(inRangeNote + ":");
         int ret = midiRecorder.addNote(inRangeNote,125,0,0);
+        System.out.println(ret);
             assertEquals(inRangeNote,ret);
 
+
         //this should return -1 because it will be a random number below the valid range
+        System.out.print(belowRangeNote + ":");
         ret = midiRecorder.addNote(belowRangeNote,125,0,0);
+        System.out.println(ret);
             assertEquals(-1, ret);
 
         //this should return -1 because it will be a random number above the valid range
+        System.out.print(overRangeNote + ":");
         ret = midiRecorder.addNote(overRangeNote,125,0,0);
+        System.out.println(ret);
             assertEquals(-1, ret);
     }
     @Test
