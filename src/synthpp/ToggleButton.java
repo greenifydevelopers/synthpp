@@ -10,7 +10,7 @@ import java.awt.*;
  */
 public class ToggleButton extends Button {
 
-    enum DIRECTION{vertical, horizontal};
+    public enum DIRECTION{vertical, horizontal};
     public DIRECTION direction;
     private boolean isOn;
 
