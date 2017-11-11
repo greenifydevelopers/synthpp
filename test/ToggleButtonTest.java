@@ -10,11 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ToggleButtonTest
 {
     private static ToggleButton toggleButton;
+    private static PApplet p;
 
     @Before
     public void initialize()
     {
-        PApplet p = new PApplet();
+        p = new PApplet();
         toggleButton = new ToggleButton(p, 20, 36,768, 12, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.vertical);
     }
 
@@ -31,6 +32,31 @@ public class ToggleButtonTest
         assertEquals(true, result);
     }
 
+    @Test
+    public void toggleButtonOn()
+    {
+        boolean result = false;
 
+        toggleButton.mousePressed(p);
 
+        if(toggleButton.isOn())
+        {
+            result = true;
+        }
+
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void toggleButtonDirection()
+    {
+        boolean result = false;
+
+        if(toggleButton.isVertical())
+        {
+            result = true;
+        }
+
+        assertEquals(true, result);
+    }
 }
