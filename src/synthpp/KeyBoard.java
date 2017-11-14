@@ -9,8 +9,8 @@ import javax.sound.midi.Synthesizer;
 
 import java.awt.*;
 
-public class KeyBoard {
-
+public class KeyBoard
+{
     private KeyButton buttons[];
     private int[] referenceTones = {0,1,2,3,4,5,6,7,8,9,10,11,12};
     private float[] tones;
@@ -47,10 +47,13 @@ public class KeyBoard {
         this.height = height;
         octave = 7;
 
-        try {
+        try
+        {
             this.synth = MidiSystem.getSynthesizer();
             this.synth.open();
-        }catch(MidiUnavailableException e){
+        }
+        catch(MidiUnavailableException e)
+        {
             e.printStackTrace();
         }
 
