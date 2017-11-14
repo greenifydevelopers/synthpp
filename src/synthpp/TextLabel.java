@@ -5,10 +5,8 @@ import processing.core.*;
 import java.awt.Color;
 import java.awt.Toolkit;
 
-/**
- * Created by Steven on 9/15/2017.
- */
-public class TextLabel {
+public class TextLabel
+{
 
     //PApplet window we will draw into
     PApplet pApplet;
@@ -44,10 +42,8 @@ public class TextLabel {
         top, center, bottom
     }
 
-    public TextLabel(PApplet pApplet, String text, PFont font,
-                     int x, int y, int w, int h,
-                     HALIGN hAlign, VALIGN vAlign,
-                     int minLeftMargin){
+    public TextLabel(PApplet pApplet, String text, PFont font, int x, int y, int w, int h, HALIGN hAlign, VALIGN vAlign, int minLeftMargin)
+    {
         this.pApplet = pApplet;
         this.setText(text);
         this.pFont = font;
@@ -56,13 +52,30 @@ public class TextLabel {
         this.hAlign = hAlign;
         this.vAlign = vAlign;
         this.minLeftMargin = minLeftMargin;
-        double textWidth = pApplet.textWidth(text);
+
+        double textWidth = setTextWidth(text);
         width = (int)(textWidth > w ? textWidth:w);
+
         double fontHeight = pFont.getSize() * Toolkit.getDefaultToolkit().getScreenResolution() / 72.0;
         height = (int)(fontHeight > h ? fontHeight:h);
         backgroundColor = Color.black;
         foregroundColor = Color.white;
         strokeColor = new Color(100,100,100, 0);
+    }
+
+    //setter for the textWdith
+    public double setTextWidth(String text)
+    {
+        double textWidth;
+        if(!text.isEmpty())
+        {
+            textWidth = pApplet.textWidth(text);
+        }
+        else
+        {
+            textWidth = 0.0;
+        }
+        return textWidth;
     }
 
     void draw(){
