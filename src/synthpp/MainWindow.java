@@ -62,7 +62,7 @@ public class MainWindow extends PApplet
     TextLabel octaveLabel;
     Button octaveMinusButton;
     Button octavePlusButton;
-    WaveScreen waveScreen;
+    //WaveScreen waveScreen;
     Button loadMidi;
     Button saveMidi;
     Button loadMP3;
