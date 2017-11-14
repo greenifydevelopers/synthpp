@@ -16,7 +16,7 @@ public class ToggleButtonTest
     public void initialize()
     {
         p = new PApplet();
-        toggleButton = new ToggleButton(p, 20, 36,768, 12, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.vertical);
+        toggleButton = new ToggleButton(p, 20, 36,768, 12, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.horizontal);
     }
 
     @Test
