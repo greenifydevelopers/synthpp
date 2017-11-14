@@ -1,6 +1,0 @@
-Testsuite: MetronomeTest
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.27 sec
-
-Testcase: metronomeCreation took 0.91 sec
-Testcase: getBPMTest took 0.138 sec
-Testcase: isRunningTest took 0.162 sec
