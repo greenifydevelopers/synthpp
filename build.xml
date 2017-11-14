@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="synthpp" default="all">
-  
+<project name="synthpp" default="all" xmlns:jacoco="antlib:org.jacoco.ant">
+  <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+    <classpath path="${basedir}/libs/jacocoant.jar"/>
+  </taskdef>
   
   <property file="build.properties"/>
   <!-- Uncomment the following property if no tests compilation is needed -->
@@ -51,6 +53,7 @@
     <exclude name="**/?*.clj"/>
     <exclude name="**/?*.aj"/>
   </patternset>
+
   
   <!-- Modules -->
   
@@ -61,8 +64,10 @@
   </target>
   
   <target name="clean" depends="clean.module.synthpp" description="cleanup all"/>
-  
+
   <target name="build.modules" depends="init, clean, compile.module.synthpp" description="build all modules"/>
-  
-  <target name="all" depends="build.modules" description="build all"/>
+
+  <target name="all" depends="build.modules, run.test, report, build.all.artifacts" description="build all"/>
+
+
 </project>

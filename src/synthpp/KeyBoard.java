@@ -1,20 +1,18 @@
 package synthpp;
 
-import ddf.minim.AudioOutput;
-import ddf.minim.signals.SineWave;
 import processing.core.PApplet;
+
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Synthesizer;
 
 import java.awt.*;
 
-/**
- * Created by Steven on 9/5/2017.
- */
-public class KeyBoard {
-
+public class KeyBoard
+{
     private KeyButton buttons[];
-    private float[] referenceTones = {8.1757989156f, 8.6619572180f, 9.1770239974f, 9.7227182413f,
-            10.3008611535f, 10.9133822323f, 11.5623257097f, 12.2498573744f,
-            12.9782717994f,13.7500000000f,14.5676175474f,15.4338531643f,16.3515978312f};
+    private int[] referenceTones = {0,1,2,3,4,5,6,7,8,9,10,11,12};
     private float[] tones;
     private char keys[] = {'A','W','S','E','D','F','T','G','Y','H','U','J','K'};
     private String notes[] = {"C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B","C"};
@@ -29,54 +27,88 @@ public class KeyBoard {
     private int keysPressed = 0;
     private float MAXAMP = 1.0f;
 
-    private AudioOutput out;
+    private Synthesizer synth;
+    private int defaultChannel = 1;
 
-    public KeyBoard(PApplet pApplet, AudioOutput out, int xPositoin, int yPosition, int width, int height){
+    MidiChannel channelA, channelW, channelS, channelE, channelD, channelF, channelT, channelG, channelY, channelH, channelU,
+                channelJ, channelK;
+
+    private int tickIndex = 0; //tracks midi sequence ticks when recording
+
+    private MidiRecorder midiRecorder;
+    private boolean record;
+
+
+    public KeyBoard(PApplet pApplet, int xPositoin, int yPosition, int width, int height){
         this.parent = pApplet;
-        this.out = out;
         this.xPosition = xPositoin;
         this.yPosition = yPosition;
         this.width = width;
         this.height = height;
         octave = 7;
+
+        try
+        {
+            this.synth = MidiSystem.getSynthesizer();
+            this.synth.open();
+        }
+        catch(MidiUnavailableException e)
+        {
+            e.printStackTrace();
+        }
+
+        channelA = synth.getChannels()[2];
+        channelW = synth.getChannels()[3];
+        channelS = synth.getChannels()[4];
+        channelE = synth.getChannels()[5];
+        channelD = synth.getChannels()[6];
+        channelF = synth.getChannels()[7];
+        channelT = synth.getChannels()[8];
+        channelG = synth.getChannels()[10];
+        channelY = synth.getChannels()[11];
+        channelH = synth.getChannels()[12];
+        channelU = synth.getChannels()[13];
+        channelJ = synth.getChannels()[14];
+        channelK = synth.getChannels()[15];
+
+        midiRecorder = null;
+        record = false;
     }
 
-    public void setOctave(int octave){
-        if(octave >= -1 && octave <= 11) {
+    public void setOctave(int octave)
+    {
+        if(octave >= -1 && octave <= 11)
+        {
             this.octave = octave;
             shiftOctave();
         }
     }
 
-    public void keyPressed(char key){
-        keysPressed = 0;
-        out.clearSignals();
-        for(int i=0;i<keys.length;i++){
-            if(Character.toUpperCase(key) == keys[i]){
-                keyStates[i] = true;
-            }
-            if(keyStates[i]){
-                keysPressed++;
-            }
-        }
-        float amp = MAXAMP;
-        if(keysPressed == 0) amp = MAXAMP;
-        else amp=MAXAMP/keysPressed;
-
-        for(int i=0;i<keys.length;i++){
-            if(keyStates[i]){
-                out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
-            }
-        }
+    public int getOctave()
+    {
+        return this.octave;
     }
-    public void keyReleased(char key){
+
+    //if this is set to true and a MidiRecorder has been registered the the
+    //notes will be recorded to the registered MidiRecorder
+    public void recordNotes(boolean r)
+    {
+        record = r;
+    }
+
+    public void registerRecorder(MidiRecorder recorder)
+    {
+        midiRecorder = recorder;
+    }
+
+    public void keyPressed(char key)
+    {
         keysPressed = 0;
-        out.clearSignals();
         for(int i=0;i<keys.length;i++)
         {
             if(Character.toUpperCase(key) == keys[i])
             {
-                keyStates[i] = false;
+                keyStates[i] = true;
             }
             if(keyStates[i])
             {
@@ -86,10 +118,196 @@ public class KeyBoard {
         float amp = MAXAMP;
         if(keysPressed == 0) amp = MAXAMP;
         else amp=MAXAMP/keysPressed;
+        for(int i=0;i<keys.length;i++)
+        {
+            if(keyStates[i])
+            {
+                if(i == 0)
+                {
+                    int noteNum = referenceTones[i];
+                    channelA.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 1)
+                {
+                    int noteNum = referenceTones[i];
+                    channelW.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 2)
+                {
+                    int noteNum = referenceTones[i];
+                    channelS.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 3)
+                {
+                    int noteNum = referenceTones[i];
+                    channelE.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 4)
+                {
+                    int noteNum = referenceTones[i];
+                    channelD.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 5)
+                {
+                    int noteNum = referenceTones[i];
+                    channelF.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 6)
+                {
+                    int noteNum = referenceTones[i];
+                    channelT.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 7)
+                {
+                    int noteNum = referenceTones[i];
+                    channelG.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 8)
+                {
+                    int noteNum = referenceTones[i];
+                    channelY.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 9)
+                {
+                    int noteNum = referenceTones[i];
+                    channelH.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 10)
+                {
+                    int noteNum = referenceTones[i];
+                    channelU.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 11)
+                {
+                    int noteNum = referenceTones[i];
+                    channelJ.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+                else if(i == 12)
+                {
+                    int noteNum = referenceTones[i];
+                    channelK.noteOn(noteNum, 125);
+                    if (midiRecorder != null && record) {
+                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
+                    }
+                }
+            }
+        }
+    }
+    public void keyReleased(char key)
+    {
+        keysPressed = 0;
 
-        for(int i=0;i<keys.length;i++){
-            if(keyStates[i]){
-                out.addSignal(new SineWave(tones[i], amp, out.sampleRate()));
+        char upperKey = Character.toUpperCase(key);
+
+        for(int i=0;i<keys.length;i++)
+        {
+            if(upperKey == keys[i])
+            {
+                if(i == 0)
+                {
+                    channelA.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 1)
+                {
+                    channelW.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 2)
+                {
+                    channelS.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 3)
+                {
+                    channelE.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 4)
+                {
+                    channelD.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 5)
+                {
+                    channelF.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 6)
+                {
+                    channelT.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 7)
+                {
+                    channelG.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 8)
+                {
+                    channelY.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 9)
+                {
+                    channelH.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 10)
+                {
+                    channelU.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 11)
+                {
+                    channelJ.allSoundOff();
+                    keyStates[i] = false;
+                }
+                else if(i == 12)
+                {
+                    channelK.allSoundOff();
+                    keyStates[i] = false;
+                }
+            }
+            if(keyStates[i])
+            {
+                keysPressed++;
             }
         }
     }
@@ -150,8 +368,8 @@ public class KeyBoard {
 
     //helper function
     private void shiftOctave(){
-        for(int i = 0; i < tones.length; ++i){
-            tones[i] =  (float)(referenceTones[i] * Math.pow(2,((octave*11)/12)));
+        for(int i = 0; i < referenceTones.length; ++i){
+            referenceTones[i] = i + (12 * octave);
         }
     }
 

@@ -5,12 +5,9 @@ import processing.core.PFont;
 
 import java.awt.*;
 
-/**
- * Created by Steven on 9/22/2017.
- */
 public class ToggleButton extends Button {
 
-    enum DIRECTION{vertical, horizontal};
+    public enum DIRECTION{horizontal, vertical};
     public DIRECTION direction;
     private boolean isOn;
 
@@ -31,14 +28,16 @@ public class ToggleButton extends Button {
         //set the current state of the switch to off
         isOn = false;
         switchColor = offColor;
-        switchX = x+4;
-        switchY = y+(h-(h/2))+1;
-        if(isVertical()) {
-            switchW = w - 8;
-            switchH = h/2-4;
-        }else{
-            switchW = w/2-4;
-            switchH = h - 8;
+        switchX = x+ (h - 3); //+ (h-(h/2))+1; // +4
+        switchY = y + 4; //y+(h-(h/2))+1;
+        if(isHorizontal())
+        {
+            switchW = w - (h+3);
+            switchH = h - 8; // h/2-4
+        }
+        else{
+            switchW = w + (h+3); // h/2-4
+            switchH = h + 8;
         }
 
     }
@@ -47,8 +46,8 @@ public class ToggleButton extends Button {
         return isOn;
     }
 
-    public boolean isVertical(){
-        if(direction == DIRECTION.vertical){
+    public boolean isHorizontal(){
+        if(direction == DIRECTION.horizontal){
             return true;
         }
         return false;
@@ -79,18 +78,24 @@ public class ToggleButton extends Button {
 
         //change the switch position
         if(isOn){
-            if(isVertical()){
-                switchY -= getHeight()/2-1;
-            }else{
-                switchX -= getWidth()/2-1;
+            if(isHorizontal())
+            {
+                switchX -= 10;
+            }
+            else
+            {
+                //switchY -= getHeight();
             }
             switchColor = onColor;
 
         }else{
-            if(isVertical()){
-                switchY += getHeight()/2-1;
-            }else{
-                switchX += getWidth()/2-1;
+            if(isHorizontal())
+            {
+                switchX += 10;
+            }
+            else
+            {
+                //switchY += getHeight();
             }
             switchColor = offColor;
         }
