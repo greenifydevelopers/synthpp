@@ -52,7 +52,7 @@ public class ToggleButtonTest
     {
         boolean result = false;
 
-        if(toggleButton.isVertical())
+        if(toggleButton.isHorizontal())
         {
             result = true;
         }

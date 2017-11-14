@@ -1,0 +1,15 @@
+Testsuite: ToggleButtonTest
+Tests run: 3, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.284 sec
+
+Testcase: toggleButtonDirection took 0.22 sec
+	Caused an ERROR
+org/junit/platform/commons/util/StringUtils
+java.lang.NoClassDefFoundError: org/junit/platform/commons/util/StringUtils
+	at ToggleButtonTest.toggleButtonDirection(ToggleButtonTest.java:60)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:335)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+
+Testcase: toggleButtonOn took 0 sec
+Testcase: toggleButtonOff took 0 sec
