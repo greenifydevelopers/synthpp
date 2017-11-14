@@ -15,10 +15,8 @@ public class MainWindow extends PApplet
     {
         PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
-<<<<<<< HEAD
-=======
+
     private Metronome metro;
->>>>>>> b3bca2864149f1d7898be0744719668e698b80ab
     private int high;
 
     private int mWidth = 1000; // was 800
