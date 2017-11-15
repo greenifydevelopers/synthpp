@@ -56,7 +56,7 @@ public class TextLabel
         double textWidth = setTextWidth(text);
         width = (int)(textWidth > w ? textWidth:w);
 
-        double fontHeight = pFont.getSize() * Toolkit.getDefaultToolkit().getScreenResolution() / 72.0;
+        double fontHeight = setFontHeight();
         height = (int)(fontHeight > h ? fontHeight:h);
         backgroundColor = Color.black;
         foregroundColor = Color.white;
@@ -69,13 +69,26 @@ public class TextLabel
         double textWidth;
         if(!text.isEmpty())
         {
-            textWidth = pApplet.textWidth(text);
+            //textWidth = pApplet.textWidth(text);
+            textWidth = (double) text.length();
         }
         else
         {
             textWidth = 0.0;
         }
         return textWidth;
+    }
+
+    public double setFontHeight()
+    {
+        if(pFont != null)
+        {
+            return pFont.getSize() * Toolkit.getDefaultToolkit().getScreenResolution() / 72.0;
+        }
+        else
+        {
+            return 0.0;
+        }
     }
 
     void draw(){
