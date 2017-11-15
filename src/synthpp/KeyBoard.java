@@ -89,6 +89,10 @@ public class KeyBoard
         return this.octave;
     }
 
+    public int[] getReferenceTones() {
+        return referenceTones;
+    }
+
     //if this is set to true and a MidiRecorder has been registered the the
     //notes will be recorded to the registered MidiRecorder
     public void recordNotes(boolean r)
