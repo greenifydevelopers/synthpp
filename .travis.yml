@@ -2,7 +2,19 @@ language: java
 jdk:
   - oraclejdk8
 
+
+
 script: ant
 
 after_success:
  bash <(curl -s https://codecov.io/bash)
+
+addons:
+  artifacts: true
+  apt:
+    packages:
+      - xvfb
+
+install:
+  - export DISPLAY=':99.0'
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &

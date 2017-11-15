@@ -18,8 +18,8 @@ public class MainWindow extends PApplet
     private Metronome metro;
     private int high;
 
-    private int mWidth = 1000; // was 800
-    private int mHeight = 610; // was 610
+    private int mWidth = 1000;
+    private int mHeight = 610;
 
     private MidiPlayer midiPlayer;
     private MP3Player mp3Player;
@@ -62,7 +62,7 @@ public class MainWindow extends PApplet
     TextLabel octaveLabel;
     Button octaveMinusButton;
     Button octavePlusButton;
-    WaveScreen waveScreen;
+    //WaveScreen waveScreen;
     Button loadMidi;
     Button saveMidi;
     Button loadMP3;

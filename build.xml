@@ -67,7 +67,7 @@
 
   <target name="build.modules" depends="init, clean, compile.module.synthpp" description="build all modules"/>
 
-  <target name="all" depends="build.modules, run.test, report" description="build all"/>
+  <target name="all" depends="build.modules, run.test, report, build.all.artifacts" description="build all"/>
 
 
 </project>
