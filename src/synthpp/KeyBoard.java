@@ -55,7 +55,7 @@ public class KeyBoard
         midiRecorder = null;
         record = false;
 
-         this.channels = synth.getChannels();
+        this.channels = synth.getChannels();
     }
 
     public void setOctave(int octave)
