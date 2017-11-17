@@ -82,7 +82,12 @@ public class MidiPlayer {
         }
         //don't reset position to beginning
     }
+
     public boolean isPlaying(){
         return isPlaying;
+    }
+
+    public boolean sequenceLoaded(){
+        return this.sequenceLoaded;
     }
 }

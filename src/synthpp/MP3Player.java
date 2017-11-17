@@ -104,4 +104,5 @@ public class MP3Player {
     public boolean isPlaying(){return isPlaying;}
     public boolean isStopped(){return isStopped;}
     public boolean isPaused(){return isPaused;}
+    public String getPath(){return path;}
 }
