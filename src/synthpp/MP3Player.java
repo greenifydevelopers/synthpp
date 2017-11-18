@@ -74,6 +74,12 @@ public class MP3Player {
             isPaused = false;
             isStopped = false;
         }
+
+        mediaPlayer.setOnEndOfMedia(new Runnable() {
+            @Override public void run() {
+                mediaPlayer.stop();
+            }
+        });
     }
 
     /**
