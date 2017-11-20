@@ -83,6 +83,22 @@ public class KeyBoardTest {
         assertEquals(true, results);
     }
 
+    @Test
+    @DisplayName("Test Get Notes")
+    public void checkGetNotes(){
+        boolean results = true;
+        String[] sample = {"C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B","C"};
+        String[] data = keyboard.getNotes();
+        for (int x = 0; x < sample.length; x++){
+            if (sample[x] != data[x]){
+                results = false;
+            }
+        }
+        assertEquals(true, results);
+    }
+
+
+
 
 
 

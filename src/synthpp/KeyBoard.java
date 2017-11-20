@@ -87,10 +87,15 @@ public class KeyBoard
     public int getOctave()
     {
         return this.octave;
+
     }
 
     public int[] getReferenceTones() {
         return referenceTones;
+    }
+
+    public boolean[] getKeyStates() {
+        return keyStates;
     }
 
     //if this is set to true and a MidiRecorder has been registered the the

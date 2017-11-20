@@ -1,0 +1,7 @@
+Testsuite: ToggleButtonTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.041 sec
+
+Testcase: toggleButtonDirectionWrongDirection took 1.276 sec
+Testcase: toggleButtonDirection took 0.001 sec
+Testcase: toggleButtonOnAndBackOff took 0.001 sec
+Testcase: toggleButtonOff took 0.002 sec
