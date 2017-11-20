@@ -24,17 +24,12 @@ public class KeyBoard
     private int yPosition;
     private int width;
     private int height;
-    private int keysPressed = 0;
-    private float MAXAMP = 1.0f;
 
     private Synthesizer synth;
     private int defaultChannel = 1;
 
-    MidiChannel channelA, channelW, channelS, channelE, channelD, channelF, channelT, channelG, channelY, channelH, channelU,
-                channelJ, channelK;
-
+    private MidiChannel[] channels;
     private int tickIndex = 0; //tracks midi sequence ticks when recording
-
     private MidiRecorder midiRecorder;
     private boolean record;
 
@@ -57,22 +52,10 @@ public class KeyBoard
             e.printStackTrace();
         }
 
-        channelA = synth.getChannels()[2];
-        channelW = synth.getChannels()[3];
-        channelS = synth.getChannels()[4];
-        channelE = synth.getChannels()[5];
-        channelD = synth.getChannels()[6];
-        channelF = synth.getChannels()[7];
-        channelT = synth.getChannels()[8];
-        channelG = synth.getChannels()[10];
-        channelY = synth.getChannels()[11];
-        channelH = synth.getChannels()[12];
-        channelU = synth.getChannels()[13];
-        channelJ = synth.getChannels()[14];
-        channelK = synth.getChannels()[15];
-
         midiRecorder = null;
         record = false;
+
+        this.channels = synth.getChannels();
     }
 
     public void setOctave(int octave)
@@ -112,211 +95,38 @@ public class KeyBoard
 
     public void keyPressed(char key)
     {
-        keysPressed = 0;
         for(int i=0;i<keys.length;i++)
         {
             if(Character.toUpperCase(key) == keys[i])
             {
+                int j = i + 2;
                 keyStates[i] = true;
-            }
-            if(keyStates[i])
-            {
-                keysPressed++;
-            }
-        }
-        float amp = MAXAMP;
-        if(keysPressed == 0) amp = MAXAMP;
-        else amp=MAXAMP/keysPressed;
-        for(int i=0;i<keys.length;i++)
-        {
-            if(keyStates[i])
-            {
-                if(i == 0)
+                int noteNum = referenceTones[i];
+                if(j == 9)
                 {
-                    int noteNum = referenceTones[i];
-                    channelA.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
+                    j = 10;
                 }
-                else if(i == 1)
-                {
-                    int noteNum = referenceTones[i];
-                    channelW.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
+                channels[j].noteOn(noteNum, 125);
+                if (midiRecorder != null && record) {
+                    midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
                 }
-                else if(i == 2)
-                {
-                    int noteNum = referenceTones[i];
-                    channelS.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 3)
-                {
-                    int noteNum = referenceTones[i];
-                    channelE.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 4)
-                {
-                    int noteNum = referenceTones[i];
-                    channelD.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 5)
-                {
-                    int noteNum = referenceTones[i];
-                    channelF.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 6)
-                {
-                    int noteNum = referenceTones[i];
-                    channelT.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 7)
-                {
-                    int noteNum = referenceTones[i];
-                    channelG.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 8)
-                {
-                    int noteNum = referenceTones[i];
-                    channelY.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 9)
-                {
-                    int noteNum = referenceTones[i];
-                    channelH.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 10)
-                {
-                    int noteNum = referenceTones[i];
-                    channelU.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 11)
-                {
-                    int noteNum = referenceTones[i];
-                    channelJ.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
-                else if(i == 12)
-                {
-                    int noteNum = referenceTones[i];
-                    channelK.noteOn(noteNum, 125);
-                    if (midiRecorder != null && record) {
-                        midiRecorder.addNote(noteNum, 125, tickIndex++, defaultChannel);
-                    }
-                }
+
             }
         }
     }
     public void keyReleased(char key)
     {
-        keysPressed = 0;
-
-        char upperKey = Character.toUpperCase(key);
-
         for(int i=0;i<keys.length;i++)
         {
-            if(upperKey == keys[i])
+            if(Character.toUpperCase(key) == keys[i])
             {
-                if(i == 0)
+                int j = i + 2;
+                keyStates[i] = false;
+                if(j == 9)
                 {
-                    channelA.allSoundOff();
-                    keyStates[i] = false;
+                    j = 10;
                 }
-                else if(i == 1)
-                {
-                    channelW.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 2)
-                {
-                    channelS.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 3)
-                {
-                    channelE.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 4)
-                {
-                    channelD.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 5)
-                {
-                    channelF.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 6)
-                {
-                    channelT.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 7)
-                {
-                    channelG.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 8)
-                {
-                    channelY.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 9)
-                {
-                    channelH.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 10)
-                {
-                    channelU.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 11)
-                {
-                    channelJ.allSoundOff();
-                    keyStates[i] = false;
-                }
-                else if(i == 12)
-                {
-                    channelK.allSoundOff();
-                    keyStates[i] = false;
-                }
-            }
-            if(keyStates[i])
-            {
-                keysPressed++;
+                channels[j].allSoundOff();
             }
         }
     }
