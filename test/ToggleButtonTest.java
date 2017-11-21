@@ -1,7 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
-import synthpp.ToggleButton;
 import processing.core.PApplet;
+import synthpp.ToggleButton;
 
 import java.awt.*;
 
@@ -9,15 +9,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ToggleButtonTest
 {
-    private static ToggleButton toggleButton, toggleButtonNotHorizontal;
+    private static ToggleButton toggleButton, toggleButtonNotVertical;
     private static PApplet p;
 
     @Before
     public void initialize()
     {
         p = new PApplet();
-        toggleButton = new ToggleButton(p, 20, 36,768, 12, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.horizontal);
-        toggleButtonNotHorizontal = new ToggleButton(p, 20, 36,768, 12, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.vertical);
+        toggleButton = new ToggleButton(p, 20, 36,768, 12, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.vertical);
+        toggleButtonNotVertical = new ToggleButton(p, 20, 36,768, 12, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.horizontal);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ToggleButtonTest
     {
         boolean result = false;
 
-        if(toggleButton.isHorizontal())
+        if(toggleButton.isVertical())
         {
             result = true;
         }
@@ -72,7 +72,7 @@ public class ToggleButtonTest
     {
         boolean result = false;
 
-        if(!toggleButtonNotHorizontal.isHorizontal())
+        if(!toggleButtonNotVertical.isVertical())
         {
             result = true;
         }

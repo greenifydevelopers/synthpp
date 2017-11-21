@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class ToggleButton extends Button {
 
-    public enum DIRECTION{horizontal, vertical};
+    public enum DIRECTION{vertical,horizontal};
     public DIRECTION direction;
     private boolean isOn;
 
@@ -28,16 +28,17 @@ public class ToggleButton extends Button {
         //set the current state of the switch to off
         isOn = false;
         switchColor = offColor;
-        switchX = x+ (h - 3); //+ (h-(h/2))+1; // +4
-        switchY = y + 4; //y+(h-(h/2))+1;
-        if(isHorizontal())
+        switchX = x+4;
+        switchY = y+(h-(h/2))+1;
+
+        if(isVertical())
         {
-            switchW = w - (h+3);
-            switchH = h - 8; // h/2-4
+            switchW = w - 8;
+            switchH = h/2-4;
         }
         else{
-            switchW = w + (h+3); // h/2-4
-            switchH = h + 8;
+            switchW = w/2-4;
+            switchH = h - 8;
         }
 
     }
@@ -46,8 +47,8 @@ public class ToggleButton extends Button {
         return isOn;
     }
 
-    public boolean isHorizontal(){
-        if(direction == DIRECTION.horizontal){
+    public boolean isVertical(){
+        if(direction == DIRECTION.vertical){
             return true;
         }
         return false;
@@ -78,28 +79,27 @@ public class ToggleButton extends Button {
 
         //change the switch position
         if(isOn){
-            if(isHorizontal())
+            if(isVertical())
             {
-                switchX -= 10;
+                switchY -= getHeight()/2-1;
             }
             else
             {
-                //switchY -= getHeight();
+                switchX -= getWidth()/2-1;
             }
             switchColor = onColor;
 
         }else{
-            if(isHorizontal())
+            if(isVertical())
             {
-                switchX += 10;
+                switchY += getHeight()/2-1;
             }
             else
             {
-                //switchY += getHeight();
+                switchX += getWidth()/2-1;
             }
             switchColor = offColor;
         }
-
         //must call super method to notify registered listener
         super.mousePressed(pApplet);
     }

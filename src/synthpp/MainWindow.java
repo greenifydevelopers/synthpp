@@ -4,7 +4,6 @@ import processing.core.PApplet;
 import processing.core.PFont;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -16,34 +15,26 @@ public class MainWindow extends PApplet
         PApplet.main(new String[] { "--location=100,100", "synthpp.MainWindow" });
     }
     private Metronome metro;
-    private int high;
 
     private int mWidth = 1000;
-    private int mHeight = 610;
+    private int mHeight = 510;
 
     private MidiPlayer midiPlayer;
     private MP3Player mp3Player;
     private String openFilename;
     private String openFilepath;
     private MidiRecorder midiRecorder;
-    private String saveFilename;
     private String saveFilepath;
-
-    private float freq = 0;
-    private int keysPressed = 0;
-    private  int port   = 30;
-    private static final float MAXAMP = 1.0f;
-    private float amp  = MAXAMP;
+    private String saveFilename;
 
     //******User interface controls follow**********
-    private Color screenColor = new Color(121,160,41);
+    private Color screenColor = new Color(0,0,0);
 
     //load up some fonts to use in the GUI-createFont called below in setup()
     private PFont titleFont;
-    private PFont labelFont12;
     private PFont labelFont20;
-    private PFont labelFont15;
-    private PFont labelFont28;
+    private PFont labelFont25;
+    private PFont digitalFont28;
 
     //this object will handle the piano keyboard control
     private KeyBoard keyBoard;
@@ -51,9 +42,9 @@ public class MainWindow extends PApplet
     TextLabel titleLabel;
     TextLabel playingMidiLabel;
     TextLabel midiSectionLabel;
+    TextLabel metronomeSectionLabel;
     TextLabel playingMP3Label;
     TextLabel mp3SectionLabel;
-    TextLabel amplitudeLabel;
     TextLabel metronomeLabel;
     TextLabel metronomeDisplay;
     Button    metronomeMinusButton;
@@ -62,12 +53,10 @@ public class MainWindow extends PApplet
     TextLabel octaveLabel;
     Button octaveMinusButton;
     Button octavePlusButton;
-    //WaveScreen waveScreen;
     Button loadMidi;
     Button saveMidi;
     Button loadMP3;
     ToggleButton metronomeOnOffSwitch;
-    BufferedImage img = null;
 
     ArrayList<Clickable> clickables;
     AudioButtons midiPlayerButtons;
@@ -84,7 +73,7 @@ public class MainWindow extends PApplet
         midiPlayer = new MidiPlayer();
 
         //create instance of a KeyBoard, initilize it, and register a MidiRecorder
-        keyBoard = new KeyBoard(this, 250,sketchHeight()-(mHeight/2) - 15, mWidth - 150 , mHeight/2 -10);
+        keyBoard = new KeyBoard(this, 250,250, mWidth - 150 , mHeight/2 -10);
         keyBoard.init();
         keyBoard.registerRecorder(midiRecorder); //now we will be able to record our notes played
 
@@ -135,14 +124,13 @@ public class MainWindow extends PApplet
         background(Color.darkGray.getRGB());
         //draw controls
 
-        //waveScreen.draw();
         keyBoard.draw();
         titleLabel.draw();
         playingMidiLabel.draw();
         midiSectionLabel.draw();
         playingMP3Label.draw();
         mp3SectionLabel.draw();
-        //amplitudeLabel.draw();
+        metronomeSectionLabel.draw();
         metronomeLabel.draw();
         metronomeDisplay.draw();
         metronomePlusButton.draw();
@@ -158,8 +146,15 @@ public class MainWindow extends PApplet
         midiPlayerButtons.draw();
         mp3PlayerButtons.draw();
 
-        drawSpeaker(30, 210 , 300 ,580 );
-        drawSpeaker(800, 970 , 300 ,580 );
+        drawSpeaker(30, 210 , 250 ,500 );
+        drawSpeaker(800, 970 , 250 ,500 );
+
+        drawBars(30, 150,44, 50, 200);
+        drawBars(30, 150,32, 39, 150);
+        drawBars(30, 150,20, 27, 100);
+
+        //Black screen area to be replaced
+        drawBars(160, 970,20, 90, 0);
 
         //implement highlighting when mouse is over any controls that are Clickable
         for(int i = 0; i < clickables.size(); i++){
@@ -185,83 +180,69 @@ public class MainWindow extends PApplet
     }
 
     private void drawGUI(){
-        titleFont = createFont("theboldfont.ttf",35);
-        labelFont20 = createFont("theboldfont.ttf",20);
-        labelFont12 = createFont("theboldfont.ttf",12);
-        labelFont15 = createFont("theboldfont.ttf",15);
-        labelFont28 = createFont("theboldfont.ttf",28);
+        titleFont = createFont("HelveticaNeue-CondensedBold.otf",35);
+        labelFont25 = createFont("HelveticaNeue-CondensedBold.otf",25);
+        labelFont20 = createFont("HelveticaNeue-CondensedBold.otf",20);
+        digitalFont28 = createFont("DS-DIGIT.ttf",35);
 
-
-        //waveScreen = new WaveScreen(this, Color.WHITE, Color.black, 120,100,465,11 );
-
-
-        titleLabel = new TextLabel(this,"Synth++", titleFont,
-                10,10,150,40, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
-                0);
+        titleLabel = new TextLabel(this,"Synth++", titleFont, 30, 35,200,40, TextLabel.HALIGN.left, TextLabel.VALIGN.center, 0);
         titleLabel.setBackgroundColor(Color.darkGray);
         titleLabel.setForegroundColor(Color.white);
 
-
-        playingMidiLabel = new TextLabel(this,"LOAD  MIDI", labelFont20,
-                20,115,250,35, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
-                5);
+        playingMidiLabel = new TextLabel(this,"LOAD MIDI", digitalFont28, 230,140,250,25, TextLabel.HALIGN.left, TextLabel.VALIGN.center, 5);
         playingMidiLabel.setBackgroundColor(screenColor);
-        playingMidiLabel.setForegroundColor(Color.darkGray);
+        playingMidiLabel.setForegroundColor(Color.gray.brighter());
+        playingMidiLabel.setHeight(45);
 
-
-        midiSectionLabel = new TextLabel(this,"MIDI", labelFont20,
-                20,80,30,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
-                0);
+        midiSectionLabel = new TextLabel(this,"MIDI", labelFont25, 230,118,10,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center, 0);
         midiSectionLabel.setBackgroundColor(Color.darkGray);
         midiSectionLabel.setForegroundColor(Color.WHITE);
+        midiSectionLabel.setHeight(10);
 
-        playingMP3Label = new TextLabel(this,"LOAD  MP3", labelFont20,
-                20,215,250,8, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
-                5);
+        playingMP3Label = new TextLabel(this,"LOAD  MP3", digitalFont28, 535,140,250,25, TextLabel.HALIGN.left, TextLabel.VALIGN.center, 5);
         playingMP3Label.setBackgroundColor(screenColor);
-        playingMP3Label.setForegroundColor(Color.darkGray);
+        playingMP3Label.setForegroundColor(Color.gray.brighter());
+        playingMP3Label.setHeight(45);
 
-        mp3SectionLabel = new TextLabel(this,"BACKTRACK", labelFont20,
-                20,180,30,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
-                0);
+        mp3SectionLabel = new TextLabel(this,"BACKTRACK", labelFont25, 535,118,30,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center, 0);
         mp3SectionLabel.setBackgroundColor(Color.darkGray);
         mp3SectionLabel.setForegroundColor(Color.WHITE);
+        mp3SectionLabel.setHeight(10);
 
-        /*
-        amplitudeLabel = new TextLabel(this,"AMPLITUDE", labelFont15,
-                265,113,200,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center,
-                0);
-        amplitudeLabel.setBackgroundColor(Color.darkGray);
-        amplitudeLabel.setForegroundColor(Color.WHITE);
-        */
+        metronomeSectionLabel = new TextLabel(this,"METRONOME", labelFont25, 845,118,10,10, TextLabel.HALIGN.left, TextLabel.VALIGN.center, 0);
+        metronomeSectionLabel.setBackgroundColor(Color.darkGray);
+        metronomeSectionLabel.setForegroundColor(Color.WHITE);
+        metronomeSectionLabel.setHeight(10);
 
-        metronomeDisplay = new TextLabel(this, Metronome.getBPM(), labelFont20, 285,115,80,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center, 0);
+        metronomeDisplay = new TextLabel(this, Metronome.getBPM(), digitalFont28, 845,140,80,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center, 0);
         metronomeDisplay.setBackgroundColor(screenColor);
-        metronomeDisplay.setForegroundColor(Color.darkGray);
+        metronomeDisplay.setForegroundColor(Color.gray.brighter());
+        metronomeDisplay.setHeight(45);
+        metronomeDisplay.setWidth(95);
 
-        metronomeLabel = new TextLabel(this,"BPM", labelFont20, 285,80,10,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center, 0);
+        metronomeLabel = new TextLabel(this,"BPM", labelFont20, 873,183,10,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center, 0);
         metronomeLabel.setBackgroundColor(Color.darkGray);
         metronomeLabel.setForegroundColor(Color.white);
 
-        metronomeMinusButton = new Button(this, "-", labelFont15, 10, 10, 347, 120, Color.darkGray, Color.white);
+        metronomeMinusButton = new Button(this, "-", labelFont25, 10, 10, 852, 140, Color.black, Color.white);
         metronomeMinusButton.setBackgroundColor(screenColor);
         metronomeMinusButton.addButtonListener(new ButtonAdapter()
         {
             @Override
             public void mousePressed(PApplet pApplet)
             {
-               if(Metronome.bpm > 30)
-               {
-                   Metronome.bpm--;
-                   metronomeDisplay.setText(Metronome.getBPM());
-               }
+                if(Metronome.bpm > 30)
+                {
+                    Metronome.bpm--;
+                    metronomeDisplay.setText(Metronome.getBPM());
+                }
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(metronomeMinusButton);
 
-        metronomePlusButton = new Button(this, "+", labelFont15, 10, 15, 293, 120, Color.darkGray, Color.white);
+        metronomePlusButton = new Button(this, "+", labelFont25, 10, 15, 920, 140, Color.black, Color.white);
         metronomePlusButton.setBackgroundColor(screenColor);
         metronomePlusButton.addButtonListener(new ButtonAdapter()
         {
@@ -279,39 +260,43 @@ public class MainWindow extends PApplet
         });
         clickables.add(metronomePlusButton);
 
-        metronomeOnOffSwitch = new ToggleButton(this, 36, 18,285, 155, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.horizontal);
+        metronomeOnOffSwitch = new ToggleButton(this, 20, 45,950, 140, Color.black, Color.white, Color.green, ToggleButton.DIRECTION.vertical);
         metronomeOnOffSwitch.addButtonListener(new ButtonAdapter()
         {
             @Override
             public void mousePressed(PApplet pApplet)
             {
-                    if (metro == null)
-                    {
-                        metro = new Metronome();
-                        Thread t = new Thread(metro);
-                        t.start();
-                    }
-                    else
-                    {
-                        metro.end();
-                        metro = null;
-                    }
+                if (metro == null)
+                {
+                    metro = new Metronome();
+                    Thread t = new Thread(metro);
+                    t.start();
+                }
+                else
+                {
+                    metro.end();
+                    metro = null;
+                }
             }
             @Override
             public void mouseReleased(PApplet pApplet) {}
         });
         clickables.add(metronomeOnOffSwitch);
 
-        octaveDisplay = new TextLabel(this,Integer.toString(keyBoard.getOctave()), labelFont20, 285,215,80,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center, 0);
+        octaveDisplay = new TextLabel(this,Integer.toString(keyBoard.getOctave()), digitalFont28, 55,140,65,5, TextLabel.HALIGN.center, TextLabel.VALIGN.center, 0);
         octaveDisplay.setBackgroundColor(screenColor);
-        octaveDisplay.setForegroundColor(Color.darkGray);
+        octaveDisplay.setForegroundColor(Color.gray.brighter());
+        octaveDisplay.setHeight(45);
+        octaveDisplay.setWidth(75);
 
-        octaveLabel = new TextLabel(this,"Octave", labelFont20, 285,180,10,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center, 0);
+        octaveLabel = new TextLabel(this,"Octave", labelFont25, 59,100,10,10, TextLabel.HALIGN.center, TextLabel.VALIGN.center, 0);
         octaveLabel.setBackgroundColor(Color.darkGray);
         octaveLabel.setForegroundColor(Color.white);
-        octaveMinusButton = new Button(this, "-", labelFont15, 10, 15, 347, 220, Color.darkGray, Color.white);
-        octaveMinusButton.setBackgroundColor(screenColor);
-        octaveMinusButton.addButtonListener(new ButtonAdapter() {
+
+        octaveMinusButton = new Button(this, "-", labelFont25, 10, 0, 65, 140, Color.black, Color.white);
+        octaveMinusButton.setBackgroundColor(Color.black);
+        octaveMinusButton.addButtonListener(new ButtonAdapter()
+        {
             @Override
             public void mousePressed(PApplet pApplet)
             {
@@ -327,8 +312,8 @@ public class MainWindow extends PApplet
             public void mouseReleased(PApplet pApplet) { }
         });
         clickables.add(octaveMinusButton);
-        octavePlusButton = new Button(this, "+", labelFont15, 10, 15, 293, 220, Color.darkGray, Color.white);
-        octavePlusButton.setBackgroundColor(screenColor);
+        octavePlusButton = new Button(this, "+", labelFont20, 10, 0, 110, 145, Color.black, Color.white);
+        octavePlusButton.setBackgroundColor(Color.black);
         octavePlusButton.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet)
@@ -346,9 +331,8 @@ public class MainWindow extends PApplet
         });
         clickables.add(octavePlusButton);
 
-
         //be sure to add anything that needs mouse clicks to the clickables arraylist
-        loadMidi = new Button(this, "Load", labelFont15, 40, 10, 20, 150, Color.darkGray, Color.white);
+        loadMidi = new Button(this, "Load", labelFont20, 40, 5, 230, 185, Color.darkGray, Color.white);
         loadMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -363,7 +347,8 @@ public class MainWindow extends PApplet
         });
         //add to clickables arraylist
         clickables.add(loadMidi);
-        saveMidi = new Button(this, "Save", labelFont15, 10, 10, 70, 150, Color.darkGray, Color.white);
+
+        saveMidi = new Button(this, "Save", labelFont20, 10, 5, 280, 185, Color.darkGray, Color.white);
         saveMidi.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -379,10 +364,9 @@ public class MainWindow extends PApplet
 
         });
 
-
         //add to clickables arraylist
         clickables.add(saveMidi);
-        loadMP3 = new Button(this, "Load", labelFont15, 20, 10, 20, 250, Color.darkGray, Color.white);
+        loadMP3 = new Button(this, "Load", labelFont20, 20, 10, 535, 185, Color.darkGray, Color.white);
         loadMP3.addButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -399,7 +383,7 @@ public class MainWindow extends PApplet
         clickables.add(loadMP3);
 
         //create the strip of midi player buttons
-        midiPlayerButtons = new AudioButtons(this, 150, 20, 115,155,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
+        midiPlayerButtons = new AudioButtons(this, 150, 20, 330,195,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         midiPlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -451,9 +435,8 @@ public class MainWindow extends PApplet
         clickables.add(midiPlayerButtons.getPauseButtonReference());
         clickables.add(midiPlayerButtons.getRecordButtonReference());
 
-
         //create the strip of mp3 player buttons
-        mp3PlayerButtons = new AudioButtons(this, 150, 20, 70,255,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
+        mp3PlayerButtons = new AudioButtons(this, 150, 20, 590,195,Color.white, Color.white, AudioButtons.LAYOUT.horizontal);
         mp3PlayerButtons.addPlayButtonListener(new ButtonAdapter() {
             @Override
             public void mousePressed(PApplet pApplet) {
@@ -586,5 +569,20 @@ public class MainWindow extends PApplet
             }
         }
 
+    }
+
+    public void drawBars(int startX, int endX, int startY, int endY, int colorForBar)
+    {
+
+        for(int y = startY; y < endY; y++)
+        {
+            for (int i = startX; i < endX; i++)
+            {
+                set(i, y, color(colorForBar,0,0));
+                set(i + 1, y, color(colorForBar,0,0));
+                set(i + 2, y, color(colorForBar,0,0));
+                set(i + 3, y, color(colorForBar,0,0));
+            }
+        }
     }
 }
