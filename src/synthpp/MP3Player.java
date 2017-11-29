@@ -17,6 +17,8 @@ public class MP3Player {
     private boolean isPlaying;
     private boolean isStopped;
     private boolean isPaused;
+    private Runnable playListener;
+    private Runnable externalPlayingEndedListener;
     final JFXPanel fxPanel = new JFXPanel(); //this is required to start JAVAFX Tookkit
 
     /**
@@ -36,6 +38,17 @@ public class MP3Player {
         isPlaying = false;
         isPaused = false;
         isStopped = false;
+
+        playListener = new Runnable() {
+            @Override
+            public void run() {
+                stop();
+                //if there has been an external listener registered then run it
+                if(externalPlayingEndedListener != null){
+                    externalPlayingEndedListener.run();
+                }
+            }
+        };
     }
 
     /**
@@ -74,12 +87,7 @@ public class MP3Player {
             isPaused = false;
             isStopped = false;
         }
-
-        mediaPlayer.setOnEndOfMedia(new Runnable() {
-            @Override public void run() {
-                mediaPlayer.stop();
-            }
-        });
+        mediaPlayer.setOnEndOfMedia(playListener);
     }
 
     /**
@@ -111,4 +119,9 @@ public class MP3Player {
     public boolean isStopped(){return isStopped;}
     public boolean isPaused(){return isPaused;}
     public String getPath(){return path;}
+
+    //this can be used to register an external listener to be ran once playing has finished
+    public void registerPlayingEndedListener(Runnable r){
+        externalPlayingEndedListener = r;
+    }
 }

@@ -6,6 +6,9 @@ import org.junit.Test; //JUnit 4
 
 import synthpp.MP3Player;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -20,7 +23,8 @@ public class MP3PlayerTest {
     //Change to BeforeAll for JUnit 5
     @Before
     public void initialize() {
-        mp3Player = new MP3Player("sample.mp3");
+        //this test mp3 is only 2 seconds in length
+        mp3Player = new MP3Player("beep1.mp3");
     }
     @Test
     @DisplayName("Test all controls")
@@ -31,5 +35,18 @@ public class MP3PlayerTest {
         assertEquals(mp3Player.isPaused(), true);
         mp3Player.stop();
         assertEquals(mp3Player.isStopped(), true);
+    }
+    @Test
+    @DisplayName("Test For Audio File Replaying Bug")
+    public void checkMP3FinishedPlayingState(){
+        mp3Player.play();
+        while(mp3Player.isPlaying()){
+            try{
+                Thread.sleep(20);
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+        assert(mp3Player.isStopped());
     }
 }
