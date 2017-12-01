@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MP3PlayerTest {
     private static MP3Player mp3Player;
 
-    //Change to BeforeAll for JUnit 5
     @Before
     public void initialize() {
         //this test mp3 is only 2 seconds in length

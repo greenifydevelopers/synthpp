@@ -81,13 +81,13 @@ public class MP3Player {
             isPlaying = true;
             isPaused = false;
             isStopped = false;
+            mediaPlayer.setOnEndOfMedia(playListener);
         }else{
             System.out.println("Error mediaPlayer null");
             isPlaying = false;
             isPaused = false;
             isStopped = false;
         }
-        mediaPlayer.setOnEndOfMedia(playListener);
     }
 
     /**

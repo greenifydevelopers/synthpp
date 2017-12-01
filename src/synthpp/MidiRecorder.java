@@ -19,10 +19,10 @@ public class MidiRecorder {
     public MidiRecorder(){
         try{
             seq = new Sequence(Sequence.PPQ, 1);
+            track = seq.createTrack();
         }catch(InvalidMidiDataException e){
             e.printStackTrace();
         }
-        track = seq.createTrack();
         noteBuffer = new ArrayList<>();
     }
     /**
